@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var config = require('./config/config');
 
 var index = require('./routes/index');
 var user = require('./routes/user');
@@ -19,18 +20,15 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
-process.env.MONGODB_URI = 'mongodb://heroku_p4dvrt15:4lp5aa4akbgavgr4qrikg69hpf@ds121980.mlab.com:21980/heroku_p4dvrt15';
-
 var options = {
     server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
     replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } }
 };
 
 mongoose.Promise = require('q').Promise;
-mongoose.connect(process.env.MONGODB_URI, options);
+mongoose.connect(config.MONGODB_URI, options);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-
 
 
 if(process.env.NODE_ENV  !== 'test') {
