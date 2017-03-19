@@ -15,7 +15,8 @@ var CitySchema = new Schema(
         location: {
             lng: Number,
             lat: Number
-        }
+        },
+        attractions : [Schema.Types.ObjectId]
     },
     {
         versionKey: false
