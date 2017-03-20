@@ -10,6 +10,8 @@ var config = require('./config/config');
 var index = require('./routes/index');
 var user = require('./routes/user');
 var city = require('./routes/city');
+var attraction = require('./routes/attraction');
+
 
 var app = express();
 
@@ -81,6 +83,9 @@ app.route("/city/:id")
     .get(city.getCity)
     .delete(city.deleteCity)
     .put(city.updateCity);
+
+app.route("/attraction")
+    .post(attraction.postAttraction);
 
 
 // catch 404 and forward to error handler
