@@ -13,7 +13,7 @@ var City = require('../model/city');
 function postAttraction(req, res) {
 
     if (req.body.cityId === undefined){
-        res.send({
+        return res.send({
             errors:{
                 cityId:{
                     kind : 'required'
@@ -21,7 +21,7 @@ function postAttraction(req, res) {
             }
         });
     }else if(req.body.cityId !== undefined && req.body.cityId.constructor !== Array){
-        res.send({
+        return res.send({
             errors:{
                 cityId:{
                     kind : 'must be an array'
@@ -31,14 +31,17 @@ function postAttraction(req, res) {
     }else{
 
         var cities = [];
+        var errors = [];
 
         req.body.cityId.forEach(function(id){
             City.findById(id, function(err, city) {
 
-                if(err) res.send(err);
+                if(err){
+                    errors.push(err);
+                }
 
                 if (city == null){
-                    res.send({
+                    errors.push({
                         errors:{
                             cityId:{
                                 kind : 'invalid city id: '+id
@@ -59,7 +62,7 @@ function postAttraction(req, res) {
         //Save it into the DB.
         newAttraction.save(function(err,attraction) {
             if(err) {
-                res.send(err);
+                errors.push(err);
             }
             else {
 
@@ -67,12 +70,17 @@ function postAttraction(req, res) {
                     city.attractions.push(attraction._id);
                     city.save(function(err, city) {
                         if(err) {
-                            res.send(err);
+                            errors.push(err);
                         }
                     });
                 });
 
-                res.json({message: "Attraction successfully added!", attraction:attraction});
+                if (errors.length > 0 ){
+                    console.error(errors[0]);
+                    return res.send(errors[0]);
+                }else{
+                    res.json({message: "Attraction successfully added!", attraction:attraction});
+                }
             }
         });
     }

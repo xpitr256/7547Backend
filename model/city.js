@@ -5,6 +5,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 mongoose.Promise = require('q').Promise;
+require('./attraction');
+var attraction = mongoose.model('attraction');
 
 //city schema definition
 var CitySchema = new Schema(
@@ -12,11 +14,16 @@ var CitySchema = new Schema(
         name: { type: String, required: true },
         description: { type: String, required: false },
         imageURL: { type: String, required: false },
+        currency :{
+            name : String,
+            symbol: String
+        },
         location: {
             lng: Number,
             lat: Number
         },
-        attractions : [Schema.Types.ObjectId]
+        attractions : [{type: Schema.Types.ObjectId, ref: "attraction"}]
+
     },
     {
         versionKey: false

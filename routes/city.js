@@ -4,6 +4,8 @@
 
 var mongoose = require('mongoose');
 var City = require('../model/city');
+var attraction = mongoose.model('attraction');
+
 
 /*
  * GET /city route to retrieve all the cities.
@@ -13,10 +15,14 @@ function getCities(req, res) {
     //Query the DB and if no errors, send all the cities
     var query = City.find({});
 
-    query.exec(function(err, citys){
-        if(err) res.send(err);
-        //If no errors, send them back to the client
-        res.json(citys);
+    query.exec(function(err, cities){
+
+        if(err) return res.send(err);
+
+        attraction.populate(cities, {path: "attractions"},function(err, cities){
+            res.json(cities);
+        });
+
     });
 }
 

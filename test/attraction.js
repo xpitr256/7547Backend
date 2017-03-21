@@ -15,7 +15,7 @@ chai.use(chaiHttp);
 
 
 
-describe('CITY',function() {
+describe('ATTRACTION',function() {
 
     this.timeout(0);
 
@@ -37,6 +37,14 @@ describe('CITY',function() {
      * Test the /POST route
      */
     describe('/POST attraction', function() {
+
+        beforeEach(function(done){ //Before each test we empty the database
+            City.remove({}, function(err){
+                Attraction.remove({},function (err){
+                    done();
+                });
+            });
+        });
 
         it('it should not POST an attraction without cityId', function (done) {
 
@@ -101,14 +109,24 @@ describe('CITY',function() {
                 }
             });
 
+
             city.save(function(err, city) {
 
+                if (err){
+                    done(new Error(err));
+                }
+
                 attraction.cityId = [city.id];
+
 
                 chai.request(server)
                     .post('/attraction')
                     .send(attraction)
                     .end(function (err, res) {
+
+                        if(err){
+                            done(new Error(err));
+                        }
 
                         res.should.have.status(200);
                         res.body.should.be.a('object');
@@ -120,12 +138,17 @@ describe('CITY',function() {
                         res.body.attraction.should.have.property('price').eql(0);
 
                         City.findById(city.id, function(err, savedCity) {
+                            if (err){
+                                done(new Error(err));
+                            }
                             savedCity.attractions.should.have.length.to.be.above(0);
                             done();
                         });
 
                     });
+
             });
+
 
 
 
