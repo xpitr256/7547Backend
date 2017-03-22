@@ -13,7 +13,7 @@ var attraction = mongoose.model('attraction');
 function getCities(req, res) {
 
     //Query the DB and if no errors, send all the cities
-    var query = City.find({}).sort( { name: -1 } );
+    var query = City.find({}).sort( { name: 1 } );
 
     query.exec(function(err, cities){
 
