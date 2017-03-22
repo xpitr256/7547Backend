@@ -12,8 +12,15 @@ var attraction = mongoose.model('attraction');
  */
 function getCities(req, res) {
 
+
+    var searchFilters = {};
+
+    if ( req.query.name !== undefined ){
+        searchFilters.name= {$regex: req.query.name, $options: 'i'};
+    }
+
     //Query the DB and if no errors, send all the cities
-    var query = City.find({}).sort( { name: 1 } );
+    var query = City.find(searchFilters).sort( { name: 1 } );
 
     query.exec(function(err, cities){
 

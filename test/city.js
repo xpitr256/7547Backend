@@ -32,6 +32,58 @@ describe('CITY',function(){
         });
     });
 
+    describe('/GET city?name=san', function() {
+        it('it should GET all the cities started with San like San Bernardo and San Miguel del Monte', function(done){
+
+            var sanBernardoCity = new City({
+                name: "San Bernardo",
+                description: "description",
+                imageURL: "wwww.example.com",
+                location: {
+                    lng:55.5,
+                    lat:42.3
+                }
+            });
+
+            var sanMiguelDelMonteCity = new City({
+                name: "San Miguel del Monte",
+                description: "description",
+                imageURL: "wwww.example.com",
+                location: {
+                    lng:55.5,
+                    lat:42.3
+                }
+            });
+
+            var buenosAiresCity = new City({
+                name: "Buenos Aires",
+                description: "description",
+                imageURL: "wwww.example.com",
+                location: {
+                    lng:55.5,
+                    lat:42.3
+                }
+            });
+
+            sanBernardoCity.save(function(err, sanBernardoCity) {
+                sanMiguelDelMonteCity.save(function(err,sanMiguelDelMonteCity){
+                    buenosAiresCity.save(function(err,buenosAiresCity){
+
+                        chai.request(server)
+                            .get('/city?name=san')
+                            .end(function(err, res) {
+                                res.should.have.status(200);
+                                res.body.should.be.a('array');
+                                res.body.length.should.be.eql(2);
+                                done();
+                            });
+
+                    });
+                });
+            });
+        });
+    });
+
     /*
      * Test the /POST route
      */
