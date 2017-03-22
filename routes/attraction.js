@@ -76,7 +76,6 @@ function postAttraction(req, res) {
                 });
 
                 if (errors.length > 0 ){
-                    console.error(errors[0]);
                     return res.send(errors[0]);
                 }else{
                     res.json({message: "Attraction successfully added!", attraction:attraction});
