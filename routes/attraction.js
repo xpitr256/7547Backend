@@ -84,7 +84,33 @@ function postAttraction(req, res) {
         });
     }
 }
+
+/*
+ * GET /attraction route to retrieve all attractions.
+ */
+function getAttractions(req, res) {
+
+
+    var searchFilters = {};
+
+    if ( req.query.name !== undefined ){
+        searchFilters.name= {$regex: req.query.name, $options: 'i'};
+    }
+
+    //Query the DB and if no errors, send all the cities
+    var query = Attraction.find(searchFilters).sort( { name: 1 } );
+
+    query.exec(function(err, attractions){
+
+        if(err) return res.send(err);
+
+        res.json(attractions);
+
+    });
+}
+
 //export all the functions
 module.exports = {
+    getAttractions: getAttractions,
     postAttraction: postAttraction
 };

@@ -8,7 +8,6 @@ var mongoose = require('mongoose');
 var config = require('./config/config');
 
 var index = require('./routes/index');
-var user = require('./routes/user');
 var city = require('./routes/city');
 var attraction = require('./routes/attraction');
 
@@ -74,7 +73,6 @@ app.use(handleCorsHeaders);
 
 
 app.use('/', index);
-app.use('/user', user);
 
 app.route("/city")
     .get(city.getCities)
@@ -85,6 +83,7 @@ app.route("/city/:id")
     .put(city.updateCity);
 
 app.route("/attraction")
+    .get(attraction.getAttractions)
     .post(attraction.postAttraction);
 
 

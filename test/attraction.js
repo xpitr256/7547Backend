@@ -19,6 +19,13 @@ describe('ATTRACTION',function() {
 
     this.timeout(0);
 
+
+    beforeEach(function(done){ //Before each test we empty the database
+        Attraction.remove({}, function(err){
+            done();
+        });
+    });
+
     var attraction = {
         name: "Obelisco",
         description: "Buenos Aires icon monument",
@@ -154,6 +161,20 @@ describe('ATTRACTION',function() {
 
         });
 
+    });
+
+
+    describe('/GET attraction', function() {
+        it('it should GET all the attractions', function(done){
+            chai.request(server)
+                .get('/attraction')
+                .end(function(err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('array');
+                    res.body.length.should.be.eql(0);
+                    done();
+                });
+        });
     });
 
 });
