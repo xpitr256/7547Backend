@@ -45,15 +45,7 @@ describe('ATTRACTION',function() {
      */
     describe('/POST attraction', function() {
 
-        beforeEach(function(done){ //Before each test we empty the database
-            City.remove({}, function(err){
-                Attraction.remove({},function (err){
-                    done();
-                });
-            });
-        });
-
-        it('it should not POST an attraction without cityId', function (done) {
+        it('it should not POST an attraction without cities', function (done) {
 
             chai.request(server)
                 .post('/attraction')
@@ -62,15 +54,15 @@ describe('ATTRACTION',function() {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('errors');
-                    res.body.errors.should.have.property('cityId');
-                    res.body.errors.cityId.should.have.property('kind').eql('required');
+                    res.body.errors.should.have.property('cities');
+                    res.body.errors.cities.should.have.property('kind').eql('required');
                     done();
                 });
         });
 
-        it('it should not POST an attraction if cityId is not an array', function (done) {
+        it('it should not POST an attraction if cities is not an array', function (done) {
 
-            attraction.cityId = 'just_a_string_no_array';
+            attraction.cities = 'just_a_string_no_array';
             chai.request(server)
                 .post('/attraction')
                 .send(attraction)
@@ -78,18 +70,18 @@ describe('ATTRACTION',function() {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('errors');
-                    res.body.errors.should.have.property('cityId');
-                    res.body.errors.cityId.should.have.property('kind').eql('must be an array');
+                    res.body.errors.should.have.property('cities');
+                    res.body.errors.cities.should.have.property('kind').eql('must be an array');
                     done();
                 });
         });
 
 
-        it('it should not POST an attraction with invalid cityId', function (done) {
+        it('it should not POST an attraction with invalid cities', function (done) {
 
             //non-existing city id
             var invalidCityId = '11cedbd1e1ba1111110b1c11';
-            attraction.cityId = [invalidCityId];
+            attraction.cities = [invalidCityId];
 
             chai.request(server)
                 .post('/attraction')
@@ -98,13 +90,13 @@ describe('ATTRACTION',function() {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('errors');
-                    res.body.errors.should.have.property('cityId');
-                    res.body.errors.cityId.should.have.property('kind').eql('invalid city id: '+invalidCityId);
+                    res.body.errors.should.have.property('cities');
+                    res.body.errors.cities.should.have.property('kind').eql('invalid city id: '+invalidCityId);
                     done();
                 });
         });
 
-        it('it should POST an attraction for a valid cityId', function (done) {
+        it('it should POST an attraction for a valid cities', function (done) {
 
             var city = new City({
                 name: "Buenos Aires",
@@ -123,7 +115,7 @@ describe('ATTRACTION',function() {
                     done(new Error(err));
                 }
 
-                attraction.cityId = [city.id];
+                attraction.cities = [city.id];
 
 
                 chai.request(server)
@@ -174,6 +166,65 @@ describe('ATTRACTION',function() {
                     res.body.length.should.be.eql(0);
                     done();
                 });
+        });
+    });
+
+    describe('/DELETE/:id attraction',function () {
+
+        var attractionId;
+
+        var city = new City({
+            name: "Buenos Aires",
+            description: "La Parîs de SudAmêrica",
+            imageURL: "wwww.example.com",
+            location: {
+                lng: 55.5,
+                lat: 42.3
+            }
+        });
+
+        before(function(done) {
+
+            city.save(function (err, city) {
+                if (err){
+                    done(new Error(err));
+                }
+                attraction.cities = [city.id];
+                chai.request(server)
+                    .post('/attraction')
+                    .send(attraction)
+                    .end(function (err, res) {
+                        if (err) {
+                            done(new Error(err));
+                        }
+                        attractionId = res.body.attraction._id;
+                        done();
+                    });
+            });
+        });
+
+        it('it should DELETE an attraction given the id',function (done){
+
+            chai.request(server)
+                .delete('/attraction/' + attractionId)
+                .end(function(err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message').eql('Attraction successfully deleted!');
+
+                    City.findById(city.id, function(err, savedCity) {
+
+                        if (err){
+                            done(new Error(err));
+                        }
+                        savedCity.attractions.length.should.be.eql(0);
+
+                        done();
+                    });
+
+                });
+
+
         });
     });
 

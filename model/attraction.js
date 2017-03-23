@@ -6,7 +6,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 mongoose.Promise = require('q').Promise;
 
-//attraction schema definition
 var AttractionSchema = new Schema(
     {
         name: { type: String, required: true },
@@ -40,7 +39,8 @@ var AttractionSchema = new Schema(
         location: {
             lng: Number,
             lat: Number
-        }
+        },
+        cities : [{type: Schema.Types.ObjectId, ref: "city"}]
     },
     {
         versionKey: false

@@ -77,6 +77,7 @@ app.use('/', index);
 app.route("/city")
     .get(city.getCities)
     .post(city.postCity);
+
 app.route("/city/:id")
     .get(city.getCity)
     .delete(city.deleteCity)
@@ -85,6 +86,11 @@ app.route("/city/:id")
 app.route("/attraction")
     .get(attraction.getAttractions)
     .post(attraction.postAttraction);
+
+app.route("/attraction/:id")
+    .delete(attraction.deleteAttraction);
+
+
 
 
 // catch 404 and forward to error handler
