@@ -6,6 +6,32 @@ var mongoose = require('mongoose');
 var Attraction = require('../model/attraction');
 var City = require('../model/city');
 var cityModel = mongoose.model('city');
+var Q = require('q');
+
+
+function validateInputCities(body){
+
+    var errors;
+
+    if (body.cities === undefined){
+
+        errors = {
+            cities:{
+                kind : 'required'
+            }
+        }
+
+    }else if(body.cities !== undefined && body.cities.constructor !== Array) {
+
+        errors = {
+            cities: {
+                kind: 'must be an array'
+            }
+        }
+    }
+
+    return errors;
+}
 
 
 /*
@@ -151,9 +177,117 @@ function deleteAttraction(req, res) {
 }
 
 
+/*
+ * PUT /attraction/:id to update an attraction given its id
+ */
+function updateAttraction(req, res) {
+
+    var errors = validateInputCities(req.body);
+
+    if (!errors) {
+        var errors = [];
+        var allNewCities = [];
+
+        var promises = [];
+
+        req.body.cities.forEach(function (id) {
+            promises.push(City.findById(id).exec());
+        });
+
+        Q.all(promises)
+            .then(function(results){
+
+                allNewCities = results;
+
+                Attraction.findById({_id: req.params.id}, function(err, attraction) {
+                        if(err) res.send(err);
+
+                        var previousCities = attraction.cities;
+
+
+                        // Detect new cities that needs to be saved
+                        var newCities =  allNewCities.filter(function(current){
+                            return previousCities.filter(function(previousCityId){
+                                    return previousCityId == current.id;
+                                }).length == 0
+                        });
+
+                        console.log(newCities);
+
+
+                        // Detect removed ones to also remove this attraction from its array
+                        var oldCitiesIds = previousCities.filter(function(previousCityId){
+                            return allNewCities.filter(function(current){
+                                    return previousCityId == current.id;
+                                }).length == 0
+                        });
+
+
+                        console.log(oldCitiesIds);
+
+
+                        Object.assign(attraction, req.body).save(function(err, city){
+                            if(err) res.send(err);
+
+                            //TODO Now go to newCities objects and put the attraction field
+
+                            //TODO and also get oldcities and remove attraction id
+
+
+                            res.json({ message: 'Attraction updated!',city:city});
+                        });
+
+            })
+            .catch(function(err){
+                 console.log('error:', err);
+             });
+
+
+
+
+/*
+
+        req.body.cities.forEach(function (id) {
+            City.findById(id, function (err, city) {
+
+                if (err) {
+                    errors.push(err);
+                }
+
+                if (city == null) {
+                    errors.push({
+                        errors: {
+                            cities: {
+                                kind: 'invalid city id: ' + id
+                            }
+                        }
+                    });
+                } else {
+                    allNewCities.push(city);
+                }
+            });
+        });
+*/
+
+
+        });
+
+
+    }else{
+        console.log("LALALA");
+    }
+
+
+
+
+
+}
+
+
 //export all the functions
 module.exports = {
     getAttractions: getAttractions,
     postAttraction: postAttraction,
-    deleteAttraction: deleteAttraction
+    deleteAttraction: deleteAttraction,
+    updateAttraction: updateAttraction
 };

@@ -88,7 +88,8 @@ app.route("/attraction")
     .post(attraction.postAttraction);
 
 app.route("/attraction/:id")
-    .delete(attraction.deleteAttraction);
+    .delete(attraction.deleteAttraction)
+    .put(attraction.updateAttraction);
 
 
 

@@ -155,7 +155,6 @@ describe('ATTRACTION',function() {
 
     });
 
-
     describe('/GET attraction', function() {
         it('it should GET all the attractions', function(done){
             chai.request(server)
@@ -224,6 +223,94 @@ describe('ATTRACTION',function() {
 
                 });
 
+
+        });
+    });
+
+
+    /*
+     * Test the /PUT/:id route
+     */
+    describe('/PUT/:id attraction', function() {
+
+
+        var attractionId;
+        var otherCityId;
+
+        var city = new City({
+            name: "Buenos Aires",
+            description: "La Parîs de SudAmêrica",
+            imageURL: "wwww.example.com",
+            location: {
+                lng: 55.5,
+                lat: 42.3
+            }
+        });
+
+        var otherCity = new City({
+            name: "La Plata",
+            description: "La capital de la provincia de Buenos Aires",
+            imageURL: "wwww.example.com",
+            location: {
+                lng: 53.5,
+                lat: 42.4
+            }
+        });
+
+        beforeEach(function(done) {
+
+            console.log("before");
+
+
+            city.save(function (err, city) {
+                if (err){
+                    done(new Error(err));
+                }
+                attraction.cities = [city.id];
+                chai.request(server)
+                    .post('/attraction')
+                    .send(attraction)
+                    .end(function (err, res) {
+                        if (err) {
+                            done(new Error(err));
+                        }
+                        attractionId = res.body.attraction._id;
+
+                        otherCity.save(function(err,otherCity){
+                            if (err) {
+                                done(new Error(err));
+                            }
+
+                            otherCityId = otherCity.id;
+                            done();
+                        });
+
+                    });
+            });
+        });
+
+
+        it('it should UPDATE an attraction given the id', function(done) {
+
+                attraction.name = "Super Obelisco";
+                attraction.cities = [otherCityId];
+
+                chai.request(server)
+                    .put('/attraction/' + attractionId)
+                    .send(attraction)
+                    .end(function(err, res) {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('message').eql('City updated!');
+                        res.body.attraction.should.have.property('name').eql("Super Obelisco");
+
+                        res.body.attraction.cities.should.be.a('array');
+                        res.body.attraction.cities.length.should.be.eql(1);
+
+                        res.body.attraction.cities[0].should.be.eql(otherCityId);
+
+                        done();
+                    });
 
         });
     });
