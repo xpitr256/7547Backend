@@ -212,9 +212,6 @@ function updateAttraction(req, res) {
                                 }).length == 0
                         });
 
-                        //console.log(newCities);
-
-
                         // Detect removed ones to also remove this attraction from its array
                         var oldCitiesIds = previousCities.filter(function(previousCityId){
                             return allNewCities.filter(function(current){
@@ -223,64 +220,72 @@ function updateAttraction(req, res) {
                         });
 
 
-                       // console.log(oldCitiesIds);
-
-
                         Object.assign(attraction, req.body).save(function(err, attraction){
                             if(err) res.send(err);
 
-                            //TODO Now go to newCities objects and put the attraction field
+                            var promises = [];
 
-                            //TODO and also get oldcities and remove attraction id
+                            // GET add attraction id to new cities.
+                            newCities.forEach(function(city){
+                                city.attractions.push(attraction.id);
+                                promises.push(city.save());
+                            });
 
 
-                            res.json({ message: 'Attraction updated!',attraction:attraction});
+                            Q.all(promises)
+                                .then(function(){
+
+                                    var promises = [];
+
+                                    oldCitiesIds.forEach(function(oldCityId){
+                                        promises.push(City.findById(oldCityId).exec());
+                                    });
+
+                                    // GET oldCities and remove attraction id.
+                                    Q.all(promises)
+                                        .then(function(results){
+
+                                            var promises =[];
+
+                                            results.forEach(function(oldCity){
+                                                var index = oldCity.attractions.indexOf(attraction.id);
+                                                if (index > -1) {
+                                                    oldCity.attractions.splice(index, 1);
+                                                    promises.push(oldCity.save());
+                                                }
+                                            });
+
+
+                                            Q.all(promises)
+                                                .then(function(){
+                                                    res.json({ message: 'Attraction updated!',attraction:attraction});
+                                                })
+                                                .catch(function(error){
+                                                    console.error('error:', error);
+                                                    res.send(error);
+                                                });
+                                        })
+                                        .catch(function(error){
+                                            console.error('error:', error);
+                                            res.send(error);
+
+                                        });
+                                })
+                                .catch(function(error){
+                                    console.error('error:', error);
+                                    res.send(error);
+
+                                });
                         });
-
             })
             .catch(function(err){
-                 console.log('error:', err);
-             });
-
-
-
-
-/*
-
-        req.body.cities.forEach(function (id) {
-            City.findById(id, function (err, city) {
-
-                if (err) {
-                    errors.push(err);
-                }
-
-                if (city == null) {
-                    errors.push({
-                        errors: {
-                            cities: {
-                                kind: 'invalid city id: ' + id
-                            }
-                        }
-                    });
-                } else {
-                    allNewCities.push(city);
-                }
+                 console.error('error:', err);
+                res.send(err);
             });
         });
-*/
-
-
-        });
-
-
     }else{
-        console.log("LALALA");
+        res.send(errors);
     }
-
-
-
-
-
 }
 
 

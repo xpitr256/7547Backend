@@ -259,9 +259,6 @@ describe('ATTRACTION',function() {
 
         beforeEach(function(done) {
 
-            console.log("before");
-
-
             city.save(function (err, city) {
                 if (err){
                     done(new Error(err));
