@@ -212,7 +212,7 @@ function updateAttraction(req, res) {
                                 }).length == 0
                         });
 
-                        console.log(newCities);
+                        //console.log(newCities);
 
 
                         // Detect removed ones to also remove this attraction from its array
@@ -223,10 +223,10 @@ function updateAttraction(req, res) {
                         });
 
 
-                        console.log(oldCitiesIds);
+                       // console.log(oldCitiesIds);
 
 
-                        Object.assign(attraction, req.body).save(function(err, city){
+                        Object.assign(attraction, req.body).save(function(err, attraction){
                             if(err) res.send(err);
 
                             //TODO Now go to newCities objects and put the attraction field
@@ -234,7 +234,7 @@ function updateAttraction(req, res) {
                             //TODO and also get oldcities and remove attraction id
 
 
-                            res.json({ message: 'Attraction updated!',city:city});
+                            res.json({ message: 'Attraction updated!',attraction:attraction});
                         });
 
             })

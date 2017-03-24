@@ -301,7 +301,7 @@ describe('ATTRACTION',function() {
                     .end(function(err, res) {
                         res.should.have.status(200);
                         res.body.should.be.a('object');
-                        res.body.should.have.property('message').eql('City updated!');
+                        res.body.should.have.property('message').eql('Attraction updated!');
                         res.body.attraction.should.have.property('name').eql("Super Obelisco");
 
                         res.body.attraction.cities.should.be.a('array');

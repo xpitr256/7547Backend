@@ -18,12 +18,13 @@ var CitySchema = new Schema(
             name : String,
             symbol: String
         },
+        state: { type: String },
+        country: { type: String },
         location: {
             lng: Number,
             lat: Number
         },
         attractions : [{type: Schema.Types.ObjectId, ref: "attraction"}]
-
     },
     {
         versionKey: false
