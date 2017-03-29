@@ -38,7 +38,7 @@ describe('CITY',function(){
             var sanBernardoCity = new City({
                 name: "San Bernardo",
                 description: "description",
-                imageURL: "wwww.example.com",
+                imagesURL: ["wwww.example.com"],
                 location: {
                     lng:55.5,
                     lat:42.3
@@ -48,7 +48,7 @@ describe('CITY',function(){
             var sanMiguelDelMonteCity = new City({
                 name: "San Miguel del Monte",
                 description: "description",
-                imageURL: "wwww.example.com",
+                imagesURL: ["wwww.example.com"],
                 location: {
                     lng:55.5,
                     lat:42.3
@@ -58,7 +58,7 @@ describe('CITY',function(){
             var buenosAiresCity = new City({
                 name: "Buenos Aires",
                 description: "description",
-                imageURL: "wwww.example.com",
+                imagesURL: ["wwww.example.com"],
                 location: {
                     lng:55.5,
                     lat:42.3
@@ -92,7 +92,7 @@ describe('CITY',function(){
         it('it should not POST a city without name field', function (done) {
             var city = {
                 description: "The city description ",
-                imageURL: "http://imageserver.com/test.png"
+                imagesURL: ["http://imageserver.com/test.png"]
             };
 
             chai.request(server)
@@ -112,7 +112,7 @@ describe('CITY',function(){
             var city = {
                 name: "Buenos Aires",
                 description: "La Parîs de SudAmêrica",
-                imageURL: "wwww.example.com",
+                imagesURL: ["wwww.example.com"],
                 location: {
                     lng:55.5,
                     lat:42.3
@@ -127,7 +127,7 @@ describe('CITY',function(){
                 res.body.should.have.property('message').eql('City successfully added!');
                 res.body.city.should.have.property('name');
                 res.body.city.should.have.property('description');
-                res.body.city.should.have.property('imageURL');
+                res.body.city.imagesURL.should.be.a('array');
                 res.body.city.should.have.property('location');
                 done();
             });
@@ -144,7 +144,7 @@ describe('CITY',function(){
             var city = new City({
                 name: "Buenos Aires",
                 description: "La Parîs de SudAmêrica",
-                imageURL: "wwww.example.com",
+                imagesURL: ["wwww.example.com"],
                 location: {
                     lng:55.5,
                     lat:42.3
@@ -160,7 +160,7 @@ describe('CITY',function(){
                     res.body.should.be.a('object');
                     res.body.should.have.property('name');
                     res.body.should.have.property('description');
-                    res.body.should.have.property('imageURL');
+                    res.body.should.have.property('imagesURL');
                     res.body.should.have.property('location');
                     res.body.should.have.property('_id').eql(city.id);
                     done();
@@ -179,7 +179,7 @@ describe('CITY',function(){
             var city = new City({
                 name: "Buenos Aires",
                 description: "La Parîs de SudAmêrica",
-                imageURL: "wwww.example.com",
+                imagesURL: ["wwww.example.com"],
                 location: {
                     lng:55.5,
                     lat:42.3
@@ -191,7 +191,7 @@ describe('CITY',function(){
                 .put('/city/' + city.id)
                 .send({ name: "Ciudad Autônoma de Buenos Aires",
                         description: "La Parîs de SudAmêrica",
-                        imageURL: "wwww.example.com",
+                        imagesURL: ["wwww.example.com"],
                         location: {
                             lng:55.5,
                             lat:42.3
@@ -213,7 +213,7 @@ describe('CITY',function(){
             var city = new City({
                 name: "Buenos Aires",
                 description: "La Parîs de SudAmêrica",
-                imageURL: "wwww.example.com",
+                imagesURL: ["wwww.example.com"],
                 location: {
                     lng:55.5,
                     lat:42.3

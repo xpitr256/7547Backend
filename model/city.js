@@ -13,7 +13,7 @@ var CitySchema = new Schema(
     {
         name: { type: String, required: true },
         description: { type: String, required: false },
-        imageURL: { type: String, required: false },
+        imagesURL: [{ type: String, required: false }],
         currency :{
             name : String,
             symbol: String
