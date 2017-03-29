@@ -29,7 +29,7 @@ describe('ATTRACTION',function() {
     var attraction = {
         name: "Obelisco",
         description: "Buenos Aires icon monument",
-        imageURL: "http://imageserver.com/test.png",
+        imagesURL: ["http://imageserver.com/test.png"],
         price: 0,
         type: 'FAMILY',
         openTime: '00:00',
@@ -101,7 +101,7 @@ describe('ATTRACTION',function() {
             var city = new City({
                 name: "Buenos Aires",
                 description: "La Paris de SudAmerica",
-                imageURL: "wwww.example.com",
+                imagesURL: ["wwww.example.com"],
                 location: {
                     lng:55.5,
                     lat:42.3
@@ -132,7 +132,7 @@ describe('ATTRACTION',function() {
                         res.body.should.have.property('message').eql('Attraction successfully added!');
                         res.body.attraction.should.have.property('name');
                         res.body.attraction.should.have.property('description');
-                        res.body.attraction.should.have.property('imageURL');
+                        res.body.attraction.should.have.property('imagesURL');
                         res.body.attraction.should.have.property('location');
                         res.body.attraction.should.have.property('price').eql(0);
 
@@ -175,7 +175,7 @@ describe('ATTRACTION',function() {
         var city = new City({
             name: "Buenos Aires",
             description: "La Parîs de SudAmêrica",
-            imageURL: "wwww.example.com",
+            imagesURL: ["wwww.example.com"],
             location: {
                 lng: 55.5,
                 lat: 42.3
@@ -240,7 +240,7 @@ describe('ATTRACTION',function() {
         var city = new City({
             name: "Buenos Aires",
             description: "La Parîs de SudAmêrica",
-            imageURL: "wwww.example.com",
+            imagesURL: ["wwww.example.com"],
             location: {
                 lng: 55.5,
                 lat: 42.3
@@ -250,7 +250,7 @@ describe('ATTRACTION',function() {
         var otherCity = new City({
             name: "La Plata",
             description: "La capital de la provincia de Buenos Aires",
-            imageURL: "wwww.example.com",
+            imagesURL: ["wwww.example.com"],
             location: {
                 lng: 53.5,
                 lat: 42.4

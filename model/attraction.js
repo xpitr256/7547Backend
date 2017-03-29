@@ -12,7 +12,7 @@ var AttractionSchema = new Schema(
         description: { type: String },
         price: { type: Number, min: 0, default: 0 },
         avgDurationInMinutes : { type: Number, min: 0 },
-        imageURL: { type: String },
+        imagesURL: [{ type: String }],
         address: { type: String },
         rating: { type: Number, min: 0, max: 5 },
         type: { type: String,
