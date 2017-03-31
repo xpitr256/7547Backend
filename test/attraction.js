@@ -32,6 +32,7 @@ describe('ATTRACTION',function() {
         imagesURL: ["http://imageserver.com/test.png"],
         price: 0,
         type: 'FAMILY',
+        audioURL: 'www.audio.com',
         openTime: '00:00',
         closeTime: '00:00',
         location: {
@@ -134,6 +135,7 @@ describe('ATTRACTION',function() {
                         res.body.attraction.should.have.property('description');
                         res.body.attraction.should.have.property('imagesURL');
                         res.body.attraction.should.have.property('location');
+                        res.body.attraction.should.have.property('audioURL');
                         res.body.attraction.should.have.property('price').eql(0);
 
                         City.findById(city.id, function(err, savedCity) {
@@ -300,12 +302,10 @@ describe('ATTRACTION',function() {
                         res.body.should.be.a('object');
                         res.body.should.have.property('message').eql('Attraction updated!');
                         res.body.attraction.should.have.property('name').eql("Super Obelisco");
-
+                        res.body.attraction.should.have.property('audioURL');
                         res.body.attraction.cities.should.be.a('array');
                         res.body.attraction.cities.length.should.be.eql(1);
-
                         res.body.attraction.cities[0].should.be.eql(otherCityId);
-
                         done();
                     });
 

@@ -13,12 +13,14 @@ var AttractionSchema = new Schema(
         price: { type: Number, min: 0, default: 0 },
         avgDurationInMinutes : { type: Number, min: 0 },
         imagesURL: [{ type: String }],
+        audioURL: { type: String },
         address: { type: String },
         rating: { type: Number, min: 0, max: 5 },
         type: { type: String,
                 uppercase: true,
                 enum: ['FAMILY', 'KIDS','ADVENTURE']
         },
+        open24Hs: {type:Boolean, default: false},
         openTime : {
             type: String,
             validate: {
