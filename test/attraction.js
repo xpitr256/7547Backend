@@ -155,6 +155,55 @@ describe('ATTRACTION',function() {
 
         });
 
+        it('it should POST and attraction with Reviews',function(done){
+            var firstReview = {
+                userName : 'First User Name Review',
+                userId: '11cedbd1e1ba1111110b1c11',
+                userAvatarUrl: 'www.avatar.com',
+                comments: 'It is a fantastic attraction',
+                rating: 4
+            };
+
+            var secondReview ={
+                userName : 'Second User Name Review',
+                userId: '11cedbd1e1ba1111110b1c12',
+                userAvatarUrl: 'www.avatar.com',
+                comments: 'It is a regular attraction',
+                rating: 2
+            };
+
+            attraction.reviews = [firstReview,secondReview];
+
+
+            chai.request(server)
+                .post('/attraction')
+                .send(attraction)
+                .end(function (err, res) {
+
+                    if(err){
+                        done(new Error(err));
+                    }
+
+                    console.log(res.body.attraction);
+
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message').eql('Attraction successfully added!');
+                    res.body.attraction.should.have.property('name');
+                    res.body.attraction.should.have.property('description');
+                    res.body.attraction.should.have.property('imagesURL');
+                    res.body.attraction.should.have.property('location');
+                    res.body.attraction.should.have.property('audioURL');
+                    res.body.attraction.should.have.property('price').eql(0);
+                    res.body.attraction.reviews.should.be.a('array');
+                    res.body.attraction.reviews.length.should.be.eql(2);
+
+                    done();
+
+                });
+
+        });
+
     });
 
     describe('/GET attraction', function() {

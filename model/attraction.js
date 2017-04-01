@@ -43,7 +43,16 @@ var AttractionSchema = new Schema(
             lng: Number,
             lat: Number
         },
-        cities : [{type: Schema.Types.ObjectId, ref: "city"}]
+        cities : [{type: Schema.Types.ObjectId, ref: "city"}],
+        reviews:[
+            {
+                userName : {type: String},
+                userId : {type: Schema.Types.ObjectId},
+                userAvatarUrl: {type: String},
+                comments : {type: String},
+                rating: {type: Number, min: 0 , max:5}
+            }
+        ]
     },
     {
         versionKey: false
