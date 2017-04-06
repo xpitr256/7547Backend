@@ -184,8 +184,6 @@ describe('ATTRACTION',function() {
                         done(new Error(err));
                     }
 
-                    console.log(res.body.attraction);
-
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message').eql('Attraction successfully added!');
