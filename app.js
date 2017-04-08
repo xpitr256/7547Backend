@@ -10,6 +10,7 @@ var config = require('./config/config');
 var index = require('./routes/index');
 var city = require('./routes/city');
 var attraction = require('./routes/attraction');
+var review = require('./routes/review');
 
 
 var app = express();
@@ -90,6 +91,9 @@ app.route("/attraction")
 app.route("/attraction/:id")
     .delete(attraction.deleteAttraction)
     .put(attraction.updateAttraction);
+
+app.route("/review")
+    .post(review.postReview);
 
 
 
