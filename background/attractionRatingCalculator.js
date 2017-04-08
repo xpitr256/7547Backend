@@ -8,7 +8,11 @@ function updateAttractionRatingFor(attraction){
 
     var newRating = 0;
 
+    console.log("Attraction review ?");
+
     if (attraction.reviews  && attraction.reviews.length > 0){
+
+        console.log("YES: " + attraction.reviews.length);
 
         var totalRatings = 0;
 
@@ -22,6 +26,9 @@ function updateAttractionRatingFor(attraction){
     attraction.rating = newRating;
 
     attraction.save(function(err,attraction){
+
+        console.log("error saving: " + err);
+
        if (err) return deferred.reject(err);
 
         deferred.resolve(attraction);
@@ -44,6 +51,8 @@ module.exports = {
             if(err) return deferred.reject(err);
 
             var promises = [];
+
+            console.log(attractions.length + " found !!");
 
             attractions.forEach(function(attraction){
                 promises.push(updateAttractionRatingFor(attraction));
