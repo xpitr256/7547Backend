@@ -47,7 +47,7 @@ var AttractionSchema = new Schema(
         reviews:[
             {
                 userName : {type: String},
-                userId : {type: Schema.Types.ObjectId},
+                userId : {type: String},
                 userAvatarUrl: {type: String},
                 comments : {type: String},
                 rating: {type: Number, min: 0 , max:5}
