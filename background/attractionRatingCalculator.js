@@ -1,4 +1,4 @@
-
+var mongoose = require('mongoose');
 var Q = require('q');
 var Attraction = require('../model/attraction');
 
@@ -8,11 +8,7 @@ function updateAttractionRatingFor(attraction){
 
     var newRating = 0;
 
-    console.log("Attraction review ?");
-
     if (attraction.reviews  && attraction.reviews.length > 0){
-
-        console.log("YES: " + attraction.reviews.length);
 
         var totalRatings = 0;
 
@@ -26,8 +22,6 @@ function updateAttractionRatingFor(attraction){
     attraction.rating = newRating;
 
     attraction.save(function(err,attraction){
-
-        console.log("error saving: " + err);
 
        if (err) return deferred.reject(err);
 
@@ -44,20 +38,13 @@ module.exports = {
 
         var deferred = Q.defer();
 
-        var query = Attraction.find();
-
-        console.log(" updateAttractionRatings ");
-
+        var query = Attraction.find({});
 
         query.exec(function(err, attractions){
-
-            console.log(err);
 
             if(err) return deferred.reject(err);
 
             var promises = [];
-
-            console.log(attractions.length + " found !!");
 
             attractions.forEach(function(attraction){
                 promises.push(updateAttractionRatingFor(attraction));
