@@ -8,7 +8,7 @@ function updateAttractionRatingFor(attraction){
 
     var newRating = 0;
 
-    if (attraction.reviews){
+    if (attraction.reviews  && attraction.reviews.length > 0){
 
         var totalRatings = 0;
 
