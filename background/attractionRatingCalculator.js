@@ -46,6 +46,9 @@ module.exports = {
 
         var query = Attraction.find();
 
+        console.log(" updateAttractionRatings ");
+
+
         query.exec(function(err, attractions){
 
             if(err) return deferred.reject(err);
