@@ -51,6 +51,8 @@ module.exports = {
 
         query.exec(function(err, attractions){
 
+            console.log(err);
+
             if(err) return deferred.reject(err);
 
             var promises = [];
