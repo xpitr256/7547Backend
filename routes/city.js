@@ -5,13 +5,14 @@
 var mongoose = require('mongoose');
 var City = require('../model/city');
 var attraction = mongoose.model('attraction');
-
+var getLanguage = require('./utils/langague.js');
 
 /*
  * GET /city route to retrieve all the cities.
  */
 function getCities(req, res) {
 
+     console.log(getLanguage(req));
 
     var searchFilters = {};
 
