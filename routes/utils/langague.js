@@ -21,10 +21,6 @@ module.exports = {
 
     filterCityLanguage : function(obj, language) {
 
-        if (obj.name[language] !== undefined){
-            obj.name = obj.name[language];
-        }
-
         if (obj.description[language] !== undefined){
             obj.description = obj.description[language];
         }

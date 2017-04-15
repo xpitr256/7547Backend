@@ -11,7 +11,7 @@ var attraction = mongoose.model('attraction');
 //city schema definition
 var CitySchema = new Schema(
     {
-        name: { type: Schema.Types.Mixed, required: true },
+        name: { type: String, required: true },
         description: Schema.Types.Mixed,
         imagesURL: [{ type: String, required: false }],
         currency :{

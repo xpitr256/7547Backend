@@ -32,14 +32,11 @@ describe('CITY',function(){
             });
         });
 
-        it('it should GET name field in english when accept-language header is send with "en" ',function(done){
+        it('it should GET description field in english when accept-language header is send with "en" ',function(done){
 
             var city = new City({
-                name:{
-                    en: "Rome",
-                    es: "Roma"
-                },
-                description: "capital del imperio romano",
+                name:"Roma",
+                description: {es:"capital del imperio romano", en:"Capital of Roman Empire"},
                 imagesURL: ["wwww.example.com"],
                 location: {
                     lng:55.5,
@@ -61,7 +58,7 @@ describe('CITY',function(){
                         res.should.have.status(200);
                         res.body.should.be.a('array');
                         res.body.length.should.be.eql(1);
-                        res.body[0].name.should.be.eql('Rome');
+                        res.body[0].description.should.be.eql('Capital of Roman Empire');
                         done();
                     });
 
@@ -73,11 +70,8 @@ describe('CITY',function(){
         it('it should GET name field in all languages when NO accept-language header is send',function(done){
 
             var city = new City({
-                name:{
-                    en: "Rome",
-                    es: "Roma"
-                },
-                description: "capital del imperio romano",
+                name:"Roma",
+                description: {es:"capital del imperio romano", en:"Capital of Roman Empire"},
                 imagesURL: ["wwww.example.com"],
                 location: {
                     lng:55.5,
@@ -98,7 +92,7 @@ describe('CITY',function(){
                         res.should.have.status(200);
                         res.body.should.be.a('array');
                         res.body.length.should.be.eql(1);
-                        res.body[0].name.should.be.a('object');
+                        res.body[0].description.should.be.a('object');
                         done();
                     });
 
@@ -256,7 +250,7 @@ describe('CITY',function(){
 
             var city = new City({
                 name: "Buenos Aires",
-                description: "La Parîs de SudAmêrica",
+                description: {es:"La Londres de SudAmerica", en: "The Paris of south America"},
                 imagesURL: ["wwww.example.com"],
                 location: {
                     lng:55.5,
@@ -267,8 +261,8 @@ describe('CITY',function(){
             city.save(function(err, city){
                 chai.request(server)
                 .put('/city/' + city.id)
-                .send({ name: "Ciudad Autônoma de Buenos Aires",
-                        description: "La Parîs de SudAmêrica",
+                .send({ name: "Buenos Aires",
+                        description: {es:"La Paris de SudAmerica", en: "The Paris of south America"},
                         imagesURL: ["wwww.example.com"],
                         location: {
                             lng:55.5,
@@ -278,7 +272,7 @@ describe('CITY',function(){
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message').eql('City updated!');
-                    res.body.city.should.have.property('name').eql("Ciudad Autônoma de Buenos Aires");
+                    res.body.city.description.should.have.property('es').eql("La Paris de SudAmerica");
                     done();
                 });
             });

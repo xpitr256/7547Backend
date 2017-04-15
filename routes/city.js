@@ -63,9 +63,16 @@ function postCity(req, res) {
  */
 function getCity(req, res) {
 
+    var requestedLanguage = language.getLanguage(req);
+
     City.findById(req.params.id, function(err, city) {
         if(err) res.send(err);
+
         //If no errors, send it back to the client
+        if (requestedLanguage){
+            language.filterCityLanguage(city,requestedLanguage);
+        }
+
         res.json(city);
     });
 }
