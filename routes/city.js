@@ -5,14 +5,14 @@
 var mongoose = require('mongoose');
 var City = require('../model/city');
 var attraction = mongoose.model('attraction');
-var getLanguage = require('./utils/langague.js');
+var language = require('./utils/langague.js');
 
 /*
  * GET /city route to retrieve all the cities.
  */
 function getCities(req, res) {
 
-     console.log(getLanguage(req));
+    var requestedLanguage = language.getLanguage(req);
 
     var searchFilters = {};
 
@@ -28,6 +28,13 @@ function getCities(req, res) {
         if(err) return res.send(err);
 
         attraction.populate(cities, {path: "attractions"},function(err, cities){
+
+            if (requestedLanguage){
+                cities.forEach(function(city){
+                   language.filterCityLanguage(city,requestedLanguage);
+                });
+            }
+
             res.json(cities);
         });
 

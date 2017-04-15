@@ -20,6 +20,7 @@ describe('CITY',function(){
     });
 
     describe('/GET city', function() {
+
         it('it should GET all the cities', function(done){
         chai.request(server)
             .get('/city')
@@ -30,6 +31,83 @@ describe('CITY',function(){
                 done();
             });
         });
+
+        it('it should GET name field in english when accept-language header is send with "en" ',function(done){
+
+            var city = new City({
+                name:{
+                    en: "Rome",
+                    es: "Roma"
+                },
+                description: "capital del imperio romano",
+                imagesURL: ["wwww.example.com"],
+                location: {
+                    lng:55.5,
+                    lat:42.3
+                }
+            });
+
+
+            city.save(function(err, city) {
+
+                if (err) {
+                    done(new Error(err));
+                }
+
+                chai.request(server)
+                    .get('/city')
+                     .set('accept-language', 'en-US,en;q=0.8,he;q=0.6,ru;q=0.4')
+                    .end(function(err, res) {
+                        res.should.have.status(200);
+                        res.body.should.be.a('array');
+                        res.body.length.should.be.eql(1);
+                        res.body[0].name.should.be.eql('Rome');
+                        done();
+                    });
+
+            });
+
+
+        });
+
+        it('it should GET name field in all languages when NO accept-language header is send',function(done){
+
+            var city = new City({
+                name:{
+                    en: "Rome",
+                    es: "Roma"
+                },
+                description: "capital del imperio romano",
+                imagesURL: ["wwww.example.com"],
+                location: {
+                    lng:55.5,
+                    lat:42.3
+                }
+            });
+
+
+            city.save(function(err, city) {
+
+                if (err) {
+                    done(new Error(err));
+                }
+
+                chai.request(server)
+                    .get('/city')
+                    .end(function(err, res) {
+                        res.should.have.status(200);
+                        res.body.should.be.a('array');
+                        res.body.length.should.be.eql(1);
+                        res.body[0].name.should.be.a('object');
+                        done();
+                    });
+
+            });
+
+
+        });
+
+
     });
 
     describe('/GET city?name=san', function() {
