@@ -7,6 +7,7 @@ var Attraction = require('../model/attraction');
 var City = require('../model/city');
 var cityModel = mongoose.model('city');
 var Q = require('q');
+var language = require('./utils/langague.js');
 
 
 function validateInputCities(body){
@@ -110,6 +111,27 @@ function postAttraction(req, res) {
         });
     }
 }
+
+
+/*
+ * GET /attraction/:id route to retrieve a attraction given its id.
+ */
+function getAttraction(req, res) {
+
+    var requestedLanguage = language.getLanguage(req);
+
+    Attraction.findById(req.params.id, function(err, attraction) {
+        if(err) res.send(err);
+
+        //If no errors, send it back to the client
+        if (requestedLanguage){
+            language.filterAttractionLanguage(attraction,requestedLanguage);
+        }
+
+        res.json(attraction);
+    });
+}
+
 
 /*
  * GET /attraction route to retrieve all attractions.
@@ -292,6 +314,7 @@ function updateAttraction(req, res) {
 //export all the functions
 module.exports = {
     getAttractions: getAttractions,
+    getAttraction: getAttraction,
     postAttraction: postAttraction,
     deleteAttraction: deleteAttraction,
     updateAttraction: updateAttraction

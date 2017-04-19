@@ -9,11 +9,11 @@ mongoose.Promise = require('q').Promise;
 var AttractionSchema = new Schema(
     {
         name: { type: String, required: true },
-        description: { type: String },
+        description: Schema.Types.Mixed,
         price: { type: Number, min: 0, default: 0 },
         avgDurationInMinutes : { type: Number, min: 0 },
         imagesURL: [{ type: String }],
-        audioURL: { type: String },
+        audioURL: Schema.Types.Mixed,
         address: { type: String },
         rating: { type: Number, min: 0, max: 5 },
         type: { type: String,
@@ -50,9 +50,18 @@ var AttractionSchema = new Schema(
                 userId : {type: String},
                 userAvatarUrl: {type: String},
                 comments : {type: String},
-                rating: {type: Number, min: 0 , max:5}
+                rating: {type: Number, min: 0 , max:5},
+                approved : Boolean,
+                date: { type: Date, default: Date.now }
             }
-        ]
+        ],
+        pointOfInterests: [{
+            name: String,
+            location: String,
+            description: Schema.Types.Mixed,
+            audioURL: Schema.Types.Mixed,
+            imagesURL: [{ type: String }]
+        }]
     },
     {
         versionKey: false

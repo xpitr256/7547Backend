@@ -26,5 +26,32 @@ module.exports = {
         }
 
         return obj;
+    },
+
+    filterAttractionLanguage: function(obj,language){
+
+        if (obj.description[language] !== undefined){
+            obj.description = obj.description[language];
+        }
+
+        if (obj.audioURL[language] !== undefined){
+            obj.audioURL = obj.audioURL[language];
+        }
+
+        if (obj.pointOfInterests && obj.pointOfInterests.length > 0){
+
+            obj.pointOfInterests.forEach(function(pointOfInterest){
+
+                if (pointOfInterest.description[language] !== undefined){
+                    pointOfInterest.description = pointOfInterest.description[language];
+                }
+
+                if (pointOfInterest.audioURL[language] !== undefined){
+                    pointOfInterest.audioURL = pointOfInterest.audioURL[language];
+                }
+            });
+        }
+
+        return obj;
     }
 };
