@@ -32,6 +32,9 @@ function getCities(req, res) {
             if (requestedLanguage){
                 cities.forEach(function(city){
                    language.filterCityLanguage(city,requestedLanguage);
+                    city.attractions.forEach(function(attractionOfTheCity){
+                        language.filterAttractionLanguage(attractionOfTheCity,requestedLanguage);
+                    });
                 });
             }
 
@@ -66,14 +69,24 @@ function getCity(req, res) {
     var requestedLanguage = language.getLanguage(req);
 
     City.findById(req.params.id, function(err, city) {
+
         if(err) res.send(err);
 
-        //If no errors, send it back to the client
-        if (requestedLanguage){
-            language.filterCityLanguage(city,requestedLanguage);
-        }
+        attraction.populate(city, {path: "attractions"},function(err, city) {
 
-        res.json(city);
+            if (requestedLanguage){
+
+                language.filterCityLanguage(city,requestedLanguage);
+                city.attractions.forEach(function(attractionOfTheCity){
+                    language.filterAttractionLanguage(attractionOfTheCity,requestedLanguage);
+                });
+            }
+
+            res.json(city);
+        });
+
+
+
     });
 }
 
