@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var City = require('../model/city');
 var attraction = mongoose.model('attraction');
 var language = require('./utils/langague.js');
+var order = require('./utils/order.js');
 
 /*
  * GET /city route to retrieve all the cities.
@@ -29,14 +30,19 @@ function getCities(req, res) {
 
         attraction.populate(cities, {path: "attractions"},function(err, cities){
 
-            if (requestedLanguage){
-                cities.forEach(function(city){
-                   language.filterCityLanguage(city,requestedLanguage);
-                    city.attractions.forEach(function(attractionOfTheCity){
-                        language.filterAttractionLanguage(attractionOfTheCity,requestedLanguage);
-                    });
+            cities.forEach(function(city){
+
+                if (requestedLanguage) {
+                    language.filterCityLanguage(city,requestedLanguage);
+                }
+
+                city.attractions.forEach(function(attractionOfTheCity){
+                    if (requestedLanguage) {
+                        language.filterAttractionLanguage(attractionOfTheCity, requestedLanguage);
+                    }
+                    order.orderReviewsByDate(attractionOfTheCity);
                 });
-            }
+            });
 
             res.json(cities);
         });
@@ -74,19 +80,20 @@ function getCity(req, res) {
 
         attraction.populate(city, {path: "attractions"},function(err, city) {
 
-            if (requestedLanguage){
+                if (requestedLanguage) {
+                    language.filterCityLanguage(city,requestedLanguage);
+                }
 
-                language.filterCityLanguage(city,requestedLanguage);
                 city.attractions.forEach(function(attractionOfTheCity){
-                    language.filterAttractionLanguage(attractionOfTheCity,requestedLanguage);
+
+                    if (requestedLanguage) {
+                        language.filterAttractionLanguage(attractionOfTheCity, requestedLanguage);
+                    }
+                    order.orderReviewsByDate(attractionOfTheCity);
                 });
-            }
 
             res.json(city);
         });
-
-
-
     });
 }
 

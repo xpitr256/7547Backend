@@ -51,7 +51,7 @@ var AttractionSchema = new Schema(
                 userAvatarUrl: {type: String},
                 comments : {type: String},
                 rating: {type: Number, min: 0 , max:5},
-                approved : Boolean,
+                approved : { type: Boolean, default: false},
                 date: { type: Date, default: Date.now }
             }
         ],

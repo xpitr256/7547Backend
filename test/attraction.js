@@ -161,7 +161,8 @@ describe('ATTRACTION',function() {
                 userId: '11cedbd1e1ba1111110b1c11',
                 userAvatarUrl: 'www.avatar.com',
                 comments: 'It is a fantastic attraction',
-                rating: 4
+                rating: 4,
+                date: new Date('2017-04-21T20:38:48.743Z')
             };
 
             var secondReview ={
@@ -214,6 +215,48 @@ describe('ATTRACTION',function() {
                     res.body.length.should.be.eql(0);
                     done();
                 });
+        });
+    });
+
+
+    /*
+     * Test the /GET/:id route
+     */
+    describe('/GET/:id attraction', function() {
+        it('it should GET a attraction by the given id', function(done){
+
+            var city = new City({
+                name: "Buenos Aires",
+                description: "La Paris de SudAmêrica",
+                imagesURL: ["wwww.example.com"],
+                location: {
+                    lng:55.5,
+                    lat:42.3
+                }
+            });
+
+            city.save(function(err, city) {
+                if(err){
+                    done(new Error(err));
+                }
+
+                attraction.cities = [city.id];
+                var testedAttraction = new Attraction(attraction);
+                testedAttraction.save(function(err,savedAttraction){
+
+                    chai.request(server)
+                        .get('/attraction/' + savedAttraction.id)
+                        .end(function(err, res){
+                            res.should.have.status(200);
+                            res.body.should.be.a('object');
+                            res.body.should.have.property('_id').eql(savedAttraction.id);
+                            done();
+                        });
+                });
+
+
+
+            });
         });
     });
 

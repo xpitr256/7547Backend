@@ -8,6 +8,7 @@ var City = require('../model/city');
 var cityModel = mongoose.model('city');
 var Q = require('q');
 var language = require('./utils/langague.js');
+var order = require('./utils/order.js');
 
 
 function validateInputCities(body){
@@ -128,6 +129,7 @@ function getAttraction(req, res) {
             language.filterAttractionLanguage(attraction,requestedLanguage);
         }
 
+        order.orderReviewsByDate(attraction);
         res.json(attraction);
     });
 }
@@ -153,6 +155,11 @@ function getAttractions(req, res) {
         if(err) return res.send(err);
 
         cityModel.populate(attractions, {path: "cities"},function(err, attractions){
+
+            attractions.forEach(function(attraction){
+                order.orderReviewsByDate(attraction);
+            });
+
             res.json(attractions);
         });
 
