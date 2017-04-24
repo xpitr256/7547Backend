@@ -51,7 +51,8 @@ describe('ATTRACTION RATING CALCULATION',function() {
             userId: '11cedbd1e1ba1111110b1c11',
             userAvatarUrl: 'www.avatar.com',
             comments: 'It is a fantastic attraction',
-            rating: 4
+            rating: 4,
+            approved: true
         };
 
         var secondReview ={
@@ -59,10 +60,19 @@ describe('ATTRACTION RATING CALCULATION',function() {
             userId: '11cedbd1e1ba1111110b1c12',
             userAvatarUrl: 'www.avatar.com',
             comments: 'It is a regular attraction',
-            rating: 2
+            rating: 2,
+            approved: true
         };
 
-        attraction.reviews = [firstReview,secondReview];
+        var thirdReview ={
+            userName : 'Thrid User Name Review',
+            userId: '11cedbd1e1ba1111110b1c13',
+            userAvatarUrl: 'www.avatar.com',
+            comments: 'It is a regular attraction',
+            rating: 5
+        };
+
+        attraction.reviews = [firstReview,secondReview,thirdReview];
 
         var city = new City({
             name: "Buenos Aires",

@@ -12,11 +12,15 @@ function updateAttractionRatingFor(attraction){
 
         var totalRatings = 0;
 
-        attraction.reviews.forEach(function(review){
-            totalRatings += review.rating;
+        var approvedReviews = attraction.reviews.filter(function(review){
+           return review.approved;
         });
 
-        newRating = totalRatings / attraction.reviews.length;
+        approvedReviews.forEach(function(approvedReview){
+            totalRatings += approvedReview.rating;
+        });
+
+        newRating = totalRatings / approvedReviews.length;
     }
 
     attraction.rating = newRating;
