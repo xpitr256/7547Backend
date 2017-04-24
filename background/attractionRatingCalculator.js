@@ -16,11 +16,14 @@ function updateAttractionRatingFor(attraction){
            return review.approved;
         });
 
-        approvedReviews.forEach(function(approvedReview){
-            totalRatings += approvedReview.rating;
-        });
+        if (approvedReviews.length > 0){
 
-        newRating = totalRatings / approvedReviews.length;
+            approvedReviews.forEach(function(approvedReview){
+                totalRatings += approvedReview.rating;
+            });
+
+            newRating = totalRatings / approvedReviews.length;
+        }
     }
 
     attraction.rating = newRating;
