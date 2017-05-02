@@ -12,17 +12,17 @@ function updateAttractionRatingFor(attraction){
 
         var totalRatings = 0;
 
-        var approvedReviews = attraction.reviews.filter(function(review){
-           return review.approved;
+        var moderatedReviews = attraction.reviews.filter(function(review){
+           return review.state > 0;
         });
 
-        if (approvedReviews.length > 0){
+        if (moderatedReviews.length > 0){
 
-            approvedReviews.forEach(function(approvedReview){
+            moderatedReviews.forEach(function(approvedReview){
                 totalRatings += approvedReview.rating;
             });
 
-            newRating = totalRatings / approvedReviews.length;
+            newRating = totalRatings / moderatedReviews.length;
         }
     }
 

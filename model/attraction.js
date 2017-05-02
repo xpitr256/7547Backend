@@ -51,7 +51,16 @@ var AttractionSchema = new Schema(
                 userAvatarUrl: {type: String},
                 comments : {type: String},
                 rating: {type: Number, min: 0 , max:5},
-                approved : { type: Boolean, default: false},
+                state: {
+                    type: Number,
+                    min: 0,
+                    max: 2,
+                    default: 0,
+                    validate : {
+                        validator : Number.isInteger,
+                        message   : '{VALUE} is not an integer value'
+                    }
+                },
                 date: { type: Date, default: Date.now }
             }
         ],

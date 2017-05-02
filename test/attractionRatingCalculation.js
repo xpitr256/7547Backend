@@ -52,7 +52,7 @@ describe('ATTRACTION RATING CALCULATION',function() {
             userAvatarUrl: 'www.avatar.com',
             comments: 'It is a fantastic attraction',
             rating: 4,
-            approved: true
+            state: 1
         };
 
         var secondReview ={
@@ -61,7 +61,7 @@ describe('ATTRACTION RATING CALCULATION',function() {
             userAvatarUrl: 'www.avatar.com',
             comments: 'It is a regular attraction',
             rating: 2,
-            approved: true
+            state: 2
         };
 
         var thirdReview ={
