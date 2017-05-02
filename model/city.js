@@ -24,7 +24,14 @@ var CitySchema = new Schema(
             lng: Number,
             lat: Number
         },
-        attractions : [{type: Schema.Types.ObjectId, ref: "attraction"}]
+        attractions : [{type: Schema.Types.ObjectId, ref: "attraction"}],
+        tours:[
+            {
+                name: { type: String, required: true },
+                description: Schema.Types.Mixed,
+                attractions : [{type: Schema.Types.ObjectId, ref: "attraction"}]
+            }
+        ]
     },
     {
         versionKey: false
