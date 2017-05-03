@@ -28,7 +28,7 @@ function getCities(req, res) {
 
         if(err) return res.send(err);
 
-        attraction.populate(cities, {path: "attractions"},function(err, cities){
+        attraction.populate(cities, [{path: "attractions"},{path: "tours.attractions"}],function(err, cities){
 
             cities.forEach(function(city){
 
@@ -78,7 +78,7 @@ function getCity(req, res) {
 
         if(err) res.send(err);
 
-        attraction.populate(city, {path: "attractions"},function(err, city) {
+        attraction.populate(city,  [{path: "attractions"},{path: "tours.attractions"}],function(err, city) {
 
                 if (requestedLanguage) {
                     language.filterCityLanguage(city,requestedLanguage);
