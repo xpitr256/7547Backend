@@ -12,8 +12,18 @@ function getPopulationPropertiesForCity(req){
 
     var  population = [{path: "attractions"},{path: "tours.attractions"}];
 
-    if ( req.query.populateTours !== undefined && !req.query.populateTours){
-        population = {path: "attractions"};
+    if ( req.query.populateTours !== undefined){
+
+        var populateTour = req.query.populateTours;
+
+        if (typeof populateTour == 'string') {
+
+            populateTour = populateTour.toLowerCase();
+
+            if (populateTour == 'false'){
+                population = {path: "attractions"};
+            }
+        }
     }
 
     return population
