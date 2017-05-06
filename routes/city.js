@@ -8,6 +8,18 @@ var attraction = mongoose.model('attraction');
 var language = require('./utils/langague.js');
 var order = require('./utils/order.js');
 
+function getPopulationPropertiesForCity(req){
+
+    var  population = [{path: "attractions"},{path: "tours.attractions"}];
+
+    if ( req.query.populateTours !== undefined && !req.query.populateTours){
+        population = {path: "attractions"};
+    }
+
+    return population
+}
+
+
 /*
  * GET /city route to retrieve all the cities.
  */
@@ -28,7 +40,7 @@ function getCities(req, res) {
 
         if(err) return res.send(err);
 
-        attraction.populate(cities, [{path: "attractions"},{path: "tours.attractions"}],function(err, cities){
+        attraction.populate(cities,getPopulationPropertiesForCity(req),function(err, cities){
 
             cities.forEach(function(city){
 
@@ -78,7 +90,7 @@ function getCity(req, res) {
 
         if(err) res.send(err);
 
-        attraction.populate(city,  [{path: "attractions"},{path: "tours.attractions"}],function(err, city) {
+        attraction.populate(city,  getPopulationPropertiesForCity(req),function(err, city) {
 
                 if (requestedLanguage) {
                     language.filterCityLanguage(city,requestedLanguage);
