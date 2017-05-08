@@ -7,6 +7,7 @@ var City = require('../model/city');
 var attraction = mongoose.model('attraction');
 var language = require('./utils/langague.js');
 var order = require('./utils/order.js');
+var filter = require('./utils/filter.js');
 
 function getPopulationPropertiesForCity(req){
 
@@ -64,6 +65,9 @@ function getCities(req, res) {
                     }
                     order.orderReviewsByDate(attractionOfTheCity);
                 });
+
+                filter.addToursItsBelongToInAttraction(city);
+
             });
 
             res.json(cities);
