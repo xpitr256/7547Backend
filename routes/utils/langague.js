@@ -25,6 +25,14 @@ module.exports = {
             obj.description = obj.description[language];
         }
 
+        if (obj.tours !== undefined){
+            obj.tours.forEach(function(tour){
+                if (tour.description !== undefined && tour.description[language] !== undefined){
+                    tour.description = tour.description[language];
+                }
+            });
+        }
+
         return obj;
     },
 
