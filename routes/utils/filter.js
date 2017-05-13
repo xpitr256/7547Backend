@@ -17,14 +17,14 @@ module.exports = {
 
                     tour.attractions.forEach(function(tourAttraction){
 
-                        if ( cityAttraction._id == tourAttraction._id){
+                        if ( cityAttraction.id == tourAttraction.id){
                             toursIBelongTo.push(tour);
                         }
 
                     });
                 });
 
-                cityAttraction.toursIBelongTo = toursIBelongTo;
+                cityAttraction._doc.toursIBelongTo = toursIBelongTo;
             });
         }
     }

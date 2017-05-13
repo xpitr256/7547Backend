@@ -30,6 +30,31 @@ function getPopulationPropertiesForCity(req){
     return population
 }
 
+function populateCity(city,requestedLanguage){
+
+    if (requestedLanguage) {
+        language.filterCityLanguage(city,requestedLanguage);
+    }
+
+    city.attractions.forEach(function(attractionOfTheCity){
+        if (requestedLanguage) {
+            language.filterAttractionLanguage(attractionOfTheCity, requestedLanguage);
+        }
+        order.orderReviewsByDate(attractionOfTheCity);
+    });
+
+    city.tours.forEach(function(tour){
+        tour.attractions.forEach(function(attractionOfTheTour){
+            if (requestedLanguage) {
+                language.filterAttractionLanguage(attractionOfTheTour, requestedLanguage);
+            }
+        });
+    });
+
+
+    filter.addToursItsBelongToInAttraction(city);
+}
+
 
 /*
  * GET /city route to retrieve all the cities.
@@ -54,20 +79,7 @@ function getCities(req, res) {
         attraction.populate(cities,getPopulationPropertiesForCity(req),function(err, cities){
 
             cities.forEach(function(city){
-
-                if (requestedLanguage) {
-                    language.filterCityLanguage(city,requestedLanguage);
-                }
-
-                city.attractions.forEach(function(attractionOfTheCity){
-                    if (requestedLanguage) {
-                        language.filterAttractionLanguage(attractionOfTheCity, requestedLanguage);
-                    }
-                    order.orderReviewsByDate(attractionOfTheCity);
-                });
-
-                filter.addToursItsBelongToInAttraction(city);
-
+                populateCity(city,requestedLanguage);
             });
 
             res.json(cities);
@@ -105,19 +117,7 @@ function getCity(req, res) {
         if(err) res.send(err);
 
         attraction.populate(city,  getPopulationPropertiesForCity(req),function(err, city) {
-
-                if (requestedLanguage) {
-                    language.filterCityLanguage(city,requestedLanguage);
-                }
-
-                city.attractions.forEach(function(attractionOfTheCity){
-
-                    if (requestedLanguage) {
-                        language.filterAttractionLanguage(attractionOfTheCity, requestedLanguage);
-                    }
-                    order.orderReviewsByDate(attractionOfTheCity);
-                });
-
+            populateCity(city,requestedLanguage);
             res.json(city);
         });
     });
