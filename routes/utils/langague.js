@@ -38,11 +38,11 @@ module.exports = {
 
     filterAttractionLanguage: function(obj,language){
 
-        if (obj.description[language] !== undefined){
+        if (obj.description && obj.description[language] !== undefined){
             obj.description = obj.description[language];
         }
 
-        if (obj.audioURL[language] !== undefined){
+        if (obj.audioURL && obj.audioURL[language] !== undefined){
             obj.audioURL = obj.audioURL[language];
         }
 
