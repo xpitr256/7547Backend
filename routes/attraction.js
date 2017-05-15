@@ -130,7 +130,27 @@ function getAttraction(req, res) {
         }
 
         order.orderReviewsByDate(attraction);
-        res.json(attraction);
+
+
+        cityModel.populate(attraction, {path: "cities"},function(err, populatedAttraction){
+
+            var toursIBelongTo = [];
+
+            if ( populatedAttraction.cities[0].tours &&  populatedAttraction.cities[0].tours.length >0){
+
+                populatedAttraction.cities[0].tours.forEach(function(tour){
+                    tour.attractions.forEach(function(tourAttraction){
+                        if ( String(tourAttraction) === String(populatedAttraction._id) ){
+                           toursIBelongTo.push(tour);
+                       }
+                    });
+                });
+            }
+
+            populatedAttraction._doc.toursIBelongTo = toursIBelongTo;
+
+            res.json(populatedAttraction);
+        });
     });
 }
 
