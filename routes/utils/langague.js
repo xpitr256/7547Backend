@@ -36,6 +36,16 @@ module.exports = {
         return obj;
     },
 
+    filterToursIBelongTo: function(obj,language){
+        if (obj._doc.toursIBelongTo !== undefined){
+            obj._doc.toursIBelongTo.forEach(function(tour){
+                if (tour.description !== undefined && tour.description[language] !== undefined){
+                    tour.description = tour.description[language];
+                }
+            });
+        }
+    },
+
     filterAttractionLanguage: function(obj,language){
 
         if (obj.description && obj.description[language] !== undefined){

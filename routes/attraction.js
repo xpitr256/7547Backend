@@ -121,35 +121,55 @@ function getAttraction(req, res) {
 
     var requestedLanguage = language.getLanguage(req);
 
-    Attraction.findById(req.params.id, function(err, attraction) {
-        if(err) res.send(err);
+    Attraction.findById(req.params.id, function (err, attraction) {
+        if (err) res.send(err);
 
         //If no errors, send it back to the client
-        if (requestedLanguage){
-            language.filterAttractionLanguage(attraction,requestedLanguage);
+        if (requestedLanguage) {
+            language.filterAttractionLanguage(attraction, requestedLanguage);
         }
 
         order.orderReviewsByDate(attraction);
 
 
-        cityModel.populate(attraction, {path: "cities"},function(err, populatedAttraction){
+        cityModel.populate(attraction, {path: "cities"}, function (err, populatedAttraction) {
 
             var toursIBelongTo = [];
 
-            if ( populatedAttraction.cities[0].tours &&  populatedAttraction.cities[0].tours.length >0){
+            if (populatedAttraction.cities[0].tours && populatedAttraction.cities[0].tours.length > 0) {
 
-                populatedAttraction.cities[0].tours.forEach(function(tour){
-                    tour.attractions.forEach(function(tourAttraction){
-                        if ( String(tourAttraction) === String(populatedAttraction._id) ){
-                           toursIBelongTo.push(tour);
-                       }
+                populatedAttraction.cities[0].tours.forEach(function (tour) {
+                    tour.attractions.forEach(function (tourAttraction) {
+                        if (String(tourAttraction) === String(populatedAttraction._id)) {
+                            toursIBelongTo.push(tour);
+                        }
                     });
                 });
+
+                populatedAttraction._doc.toursIBelongTo = toursIBelongTo;
+
+                Attraction.populate(populatedAttraction, {path: "toursIBelongTo.attractions"}, function (err, tourPopulatedAttraction) {
+
+                    if (requestedLanguage) {
+                        language.filterToursIBelongTo(tourPopulatedAttraction, requestedLanguage)
+                        tourPopulatedAttraction._doc.toursIBelongTo.forEach(function(tour){
+                            tour.attractions.forEach(function(attractionOfTheTour){
+                                language.filterAttractionLanguage(attractionOfTheTour,requestedLanguage);
+                            });
+                        });
+                    }
+
+                    res.json(tourPopulatedAttraction);
+                });
+            } else {
+                populatedAttraction._doc.toursIBelongTo = toursIBelongTo;
+
+                if (requestedLanguage) {
+                    language.filterToursIBelongTo(populatedAttraction, requestedLanguage)
+                }
+
+                res.json(populatedAttraction);
             }
-
-            populatedAttraction._doc.toursIBelongTo = toursIBelongTo;
-
-            res.json(populatedAttraction);
         });
     });
 }
