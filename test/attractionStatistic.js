@@ -93,5 +93,32 @@ describe('ATTRACTION STATISTIC',function() {
                     done();
                 });
         });
+
+
+        it('it should POST an attractionStatistic', function (done) {
+
+            var completeAttractionStatistic = {
+                androidId: 'androidID',
+                userId: 'userId',
+                socialNetwork: 'FACEBOOK',
+                attraction: '11cedbd1e1ba1111110b1c11'
+            };
+
+            chai.request(server)
+                .post('/attractionStatistic')
+                .send(completeAttractionStatistic)
+                .end(function (err, res) {
+
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message').eql('AttractionStatistic successfully added!');
+                    res.body.attractionStatistic.should.have.property('androidId');
+                    res.body.attractionStatistic.should.have.property('attraction');
+                    res.body.attractionStatistic.should.have.property('userId');
+                    res.body.attractionStatistic.should.have.property('socialNetwork');
+                    res.body.attractionStatistic.should.have.property('date');
+                    done();
+                });
+        });
     });
 });

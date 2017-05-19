@@ -11,7 +11,7 @@ var index = require('./routes/index');
 var city = require('./routes/city');
 var attraction = require('./routes/attraction');
 var review = require('./routes/review');
-
+var attractionStatistic = require('./routes/attractionStatistic');
 
 var app = express();
 
@@ -71,8 +71,6 @@ var handleCorsHeaders = function (req, res, next) {
 
 app.use(handleCorsHeaders);
 
-
-
 app.use('/', index);
 
 app.route("/city")
@@ -96,7 +94,8 @@ app.route("/attraction/:id")
 app.route("/review")
     .post(review.postReview);
 
-
+app.route("/attractionStatistic")
+    .post(attractionStatistic.postAttractionStatistic);
 
 
 // catch 404 and forward to error handler
