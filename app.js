@@ -12,6 +12,8 @@ var city = require('./routes/city');
 var attraction = require('./routes/attraction');
 var review = require('./routes/review');
 var attractionStatistic = require('./routes/attractionStatistic');
+var appVisitStatistic = require('./routes/appVisitStatistic');
+
 
 var app = express();
 
@@ -97,6 +99,8 @@ app.route("/review")
 app.route("/attractionStatistic")
     .post(attractionStatistic.postAttractionStatistic);
 
+app.route("/appVisitStatistic")
+    .post(appVisitStatistic.postAppVisitStatistic);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
