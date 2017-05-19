@@ -2,31 +2,8 @@
  * Created by pablom on 18/05/17.
  */
 
-
-var mongoose = require('mongoose');
 var AttractionStatistic = require('../model/attractionStatistic');
-var Q = require('q');
-
-function invalidSocialNetwork(req){
-
-    if (req.body.socialNetwork === undefined ){
-        return false;
-    }
-
-    var socialNetworks = ['FACEBOOK','TWITTER'];
-
-    var invalid = true;
-
-    socialNetworks.forEach(function(socialNetwork){
-
-        if (socialNetwork == req.body.socialNetwork.toUpperCase()){
-            invalid = false;
-        }
-
-    });
-
-    return invalid;
-}
+var invalidSocialNetwork = require('./utils/socialNetwork.js').invalidSocialNetwork;
 
 /*
  * POST /attractionStatistic to save a new attractionStatistic.
