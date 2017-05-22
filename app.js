@@ -97,7 +97,8 @@ app.route("/review")
     .post(review.postReview);
 
 app.route("/attractionStatistic")
-    .post(attractionStatistic.postAttractionStatistic);
+    .post(attractionStatistic.postAttractionStatistic)
+    .get(attractionStatistic.getTop10Attractions);
 
 app.route("/appVisitStatistic")
     .post(appVisitStatistic.postAppVisitStatistic);

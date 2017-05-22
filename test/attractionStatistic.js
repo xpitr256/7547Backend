@@ -11,6 +11,7 @@ var should = chai.should();
 var mongoose = require("mongoose");
 var Attraction = require('../model/attraction');
 var AttractionStatistic = require('../model/attractionStatistic');
+var City = require('../model/city');
 
 chai.use(chaiHttp);
 
@@ -19,6 +20,7 @@ describe('ATTRACTION STATISTIC',function() {
     this.timeout(0);
 
     beforeEach(function(done){ //Before each test we empty the database
+
         AttractionStatistic.remove({}, function(err){
             done();
         });
@@ -118,6 +120,127 @@ describe('ATTRACTION STATISTIC',function() {
                     res.body.attractionStatistic.should.have.property('socialNetwork');
                     res.body.attractionStatistic.should.have.property('date');
                     done();
+                });
+        });
+    });
+
+
+    describe('/GET attractionStatistic',function(){
+
+        var savedAttractions =[];
+
+        beforeEach(function(done) {
+
+            var city = new City({
+                name: "Buenos Aires",
+                description: "La Paris de SudAmerica",
+                imagesURL: ["wwww.example.com"],
+                location: {
+                    lng: 55.5,
+                    lat: 42.3
+                }
+            });
+
+            city.save(function (err, city) {
+
+                if (err) {
+                    done(new Error(err));
+                }
+
+                var attraction1 = {
+                    name: "Obelisco",
+                    cities: [city.id]
+                };
+
+
+                chai.request(server)
+                    .post('/attraction')
+                    .send(attraction1)
+                    .end(function (err, res) {
+
+                        if (err) {
+                            done(new Error(err));
+                        }
+
+                        savedAttractions.push(res.body.attraction);
+
+                        var attraction2 = {
+                            name: "Casa Rosada",
+                            cities: [city.id]
+                        };
+
+                        chai.request(server)
+                            .post('/attraction')
+                            .send(attraction2)
+                            .end(function (err, res) {
+
+                                if (err) {
+                                    done(new Error(err));
+                                }
+
+                                savedAttractions.push(res.body.attraction);
+                                done();
+                            });
+                    });
+            });
+
+        });
+
+
+        it('it should retrieve top 10 visited attractions', function (done) {
+
+            var attractionStatisticForAttraction2 = {
+                androidId: 'androidID',
+                userId: 'userId',
+                socialNetwork: 'FACEBOOK',
+                attraction: savedAttractions[1]._id
+            };
+
+            chai.request(server)
+                .post('/attractionStatistic')
+                .send(attractionStatisticForAttraction2)
+                .end(function (err, res){
+
+                    if (err) {
+                        done(new Error(err));
+                    }
+
+                    chai.request(server)
+                        .post('/attractionStatistic')
+                        .send(attractionStatisticForAttraction2)
+                        .end(function (err, res) {
+
+                            if (err) {
+                                done(new Error(err));
+                            }
+
+                            var attractionStatisticForAttraction1 = {
+                                androidId: 'androidID',
+                                userId: 'userId',
+                                socialNetwork: 'FACEBOOK',
+                                attraction: savedAttractions[0]._id
+                            };
+
+                            chai.request(server)
+                                .post('/attractionStatistic')
+                                .send(attractionStatisticForAttraction1)
+                                .end(function (err, res) {
+
+                                    if (err) {
+                                        done(new Error(err));
+                                    }
+
+                                    chai.request(server)
+                                        .get('/attractionStatistic')
+                                        .end(function(err, res) {
+
+                                            res.should.have.status(200);
+                                            res.body.should.be.a('array');
+                                            res.body.length.should.be.eql(2);
+                                            done();
+                                        });
+                                });
+                        });
                 });
         });
     });
