@@ -13,6 +13,22 @@ var AppVisitStatistic = require('../model/appVisitStatistic');
 
 chai.use(chaiHttp);
 
+function getYesterdaysDate() {
+    var date = new Date();
+    date.setDate(date.getDate()-1);
+    var month = (date.getMonth()+1);
+    var day = date.getDate();
+    return date.getFullYear() + '/'+ (month < 10 ? '0' : '') + month + '/' + (day < 10 ? '0' : '') + day;
+}
+
+function getTomorrowsDate() {
+    var date = new Date();
+    date.setDate(date.getDate()+1);
+    var month = (date.getMonth()+1);
+    var day = date.getDate();
+    return date.getFullYear() + '/'+ (month < 10 ? '0' : '') + month + '/' + (day < 10 ? '0' : '') + day;
+}
+
 describe('APPLICATION VISIT STATISTIC',function() {
 
     this.timeout(0);
@@ -25,42 +41,52 @@ describe('APPLICATION VISIT STATISTIC',function() {
 
     describe('/GET appVisitStatistic', function() {
 
-        it('it should GET 1 global user for 2 appVisitStatistic of the same day', function (done) {
+        it('it should GET 1 global user for 2 appVisitStatistic of the same day for the same user', function (done) {
 
             var completeStatistic1 = new AppVisitStatistic({
                 androidId: 'androidID',
-                date: new Date('2017-05-25T17:30:48.743Z')
+                date: new Date()
             });
 
             var completeStatistic2 = new AppVisitStatistic({
                 androidId: 'androidID',
                 userId: 'userId',
                 socialNetwork: 'FACEBOOK',
-                date: new Date('2017-05-25T20:38:48.743Z')
+                date: new Date()
             });
 
-            var promises = [];
-            promises.push(completeStatistic1.save());
-            promises.push(completeStatistic2.save());
+            chai.request(server)
+                .post('/appVisitStatistic')
+                .send(completeStatistic1)
+                .end(function (err, res) {
 
-            Q.all(promises)
-                .then(function(){
+                    if (err) {
+                        done(new Error(err));
+                    }
 
                     chai.request(server)
-                        .get('/appVisitStatistic')
-                        .end(function(err, res) {
+                        .post('/appVisitStatistic')
+                        .send(completeStatistic2)
+                        .end(function (err, res) {
 
-                            res.should.have.status(200);
-                            res.body.should.be.a('array');
-                            res.body.length.should.be.eql(1);
-                            res.body[0].should.have.property('Month');
-                            res.body[0].should.have.property('visits');
-                            res.body[0].visits.should.be.eql(1);
-                            done();
+                            if (err) {
+                                done(new Error(err));
+                            }
+
+                            chai.request(server)
+                                .get('/appVisitStatistic?fromDate='+getYesterdaysDate()+'&toDate='+getTomorrowsDate())
+                                .end(function(err, res) {
+
+                                    res.should.have.status(200);
+                                    res.body.should.be.a('array');
+                                    res.body.length.should.be.eql(1);
+                                    res.body[0].should.have.property('Month');
+                                    res.body[0].should.have.property('visits');
+                                    res.body[0].visits.should.be.eql(1);
+                                    done();
+                                });
                         });
-                }).fail(function(error){
-                    done(new Error(error));
-            });
+                });
         });
     });
 
