@@ -7,7 +7,7 @@ var chai = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../bin/www');
 var should = chai.should();
-
+var Q = require('q');
 var mongoose = require("mongoose");
 var AppVisitStatistic = require('../model/appVisitStatistic');
 
@@ -23,6 +23,46 @@ describe('APPLICATION VISIT STATISTIC',function() {
         });
     });
 
+    describe('/GET appVisitStatistic', function() {
+
+        it('it should GET 1 global user for 2 appVisitStatistic of the same day', function (done) {
+
+            var completeStatistic1 = new AppVisitStatistic({
+                androidId: 'androidID',
+                date: new Date('2017-05-25T17:30:48.743Z')
+            });
+
+            var completeStatistic2 = new AppVisitStatistic({
+                androidId: 'androidID',
+                userId: 'userId',
+                socialNetwork: 'FACEBOOK',
+                date: new Date('2017-05-25T20:38:48.743Z')
+            });
+
+            var promises = [];
+            promises.push(completeStatistic1.save());
+            promises.push(completeStatistic2.save());
+
+            Q.all(promises)
+                .then(function(){
+
+                    chai.request(server)
+                        .get('/appVisitStatistic')
+                        .end(function(err, res) {
+
+                            res.should.have.status(200);
+                            res.body.should.be.a('array');
+                            res.body.length.should.be.eql(1);
+                            res.body[0].should.have.property('Month');
+                            res.body[0].should.have.property('visits');
+                            res.body[0].visits.should.be.eql(1);
+                            done();
+                        });
+                }).fail(function(error){
+                    done(new Error(error));
+            });
+        });
+    });
 
     /*
      * Test the /POST route
@@ -77,7 +117,8 @@ describe('APPLICATION VISIT STATISTIC',function() {
             var completeStatistic = {
                 androidId: 'androidID',
                 userId: 'userId',
-                socialNetwork: 'FACEBOOK'
+                socialNetwork: 'FACEBOOK',
+                country: 'AR'
             };
 
             chai.request(server)
@@ -90,6 +131,7 @@ describe('APPLICATION VISIT STATISTIC',function() {
                     res.body.should.have.property('message').eql('AppVisitStatistic successfully added!');
                     res.body.appVisitStatistic.should.have.property('androidId');
                     res.body.appVisitStatistic.should.have.property('userId');
+                    res.body.appVisitStatistic.should.have.property('country');
                     res.body.appVisitStatistic.should.have.property('socialNetwork');
                     res.body.appVisitStatistic.should.have.property('date');
                     done();

@@ -101,7 +101,8 @@ app.route("/attractionStatistic")
     .get(attractionStatistic.getTop10Attractions);
 
 app.route("/appVisitStatistic")
-    .post(appVisitStatistic.postAppVisitStatistic);
+    .post(appVisitStatistic.postAppVisitStatistic)
+    .get(appVisitStatistic.getAppVisitStatistic);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

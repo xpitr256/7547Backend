@@ -15,6 +15,7 @@ var AppVisitStatisticSchema = new Schema(
             uppercase: true,
             enum: ['FACEBOOK','TWITTER']
         },
+        country: {type: String},
         date: { type: Date, default: Date.now }
     },
     {

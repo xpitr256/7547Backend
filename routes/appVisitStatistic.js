@@ -5,6 +5,10 @@
 var AppVisitStatistic = require('../model/appVisitStatistic');
 var invalidSocialNetwork = require('./utils/socialNetwork.js').invalidSocialNetwork;
 
+function getAppVisitStatistic(req,res){
+
+}
+
 /*
  * POST /appVisitStatistic to save a new appVisitStatistic.
  */
@@ -49,5 +53,6 @@ function postAppVisitStatistic(req, res) {
 
 //export all the functions
 module.exports = {
+    getAppVisitStatistic: getAppVisitStatistic,
     postAppVisitStatistic: postAppVisitStatistic
 };
