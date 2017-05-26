@@ -40,7 +40,9 @@ function getAppVisitStatistic(req,res) {
                         visits: statistic.count
                     };
 
-                    usersPerMonth.push(userPerMonth);
+                    if ( userPerMonth.visits > 0){
+                        usersPerMonth.push(userPerMonth);
+                    }
                 });
 
                 return res.json(usersPerMonth);
