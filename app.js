@@ -104,6 +104,9 @@ app.route("/appVisitStatistic")
     .post(appVisitStatistic.postAppVisitStatistic)
     .get(appVisitStatistic.getAppVisitStatistic);
 
+app.route("/appVisitStatisticByCountryAndSocialNetwork")
+    .get(appVisitStatistic.getAppVisitStatisticByCountryAndSocialNetwork);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

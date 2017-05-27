@@ -4,8 +4,149 @@
 
 var AppVisitStatistic = require('../model/appVisitStatistic');
 var invalidSocialNetwork = require('./utils/socialNetwork.js').invalidSocialNetwork;
-
+var Q = require('q');
 var monthToText = ["Enero", "Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+function getColorBy(colorIndex){
+
+    var colorCombo = ['#FF9900','#6599FF','#FFDE00','#097054','#993300','#00628B','#81A594','#990033'];
+
+    if (colorIndex > (colorCombo.length-1)){
+        var randomIndex = Math.floor(Math.random() * (colorCombo.length-1));
+        return colorCombo[randomIndex];
+    }
+
+    return colorCombo[colorIndex];
+}
+
+function getSocialNetworkStatisticByCountry(statistic,colorIndex){
+    var deferred = Q.defer();
+    AppVisitStatistic.aggregate(
+        [
+            { $match: {country: statistic._id.country }},
+            {
+                "$group": {
+                    _id : { socialNetwork: "$socialNetwork" },
+                    "count": { $sum: { $cond:[
+                        { $and: [ {$gte: ["$date", fromDate]}, {$lte: ["$date", toDate]} ] }, 1, 0]
+                    }}
+                }
+            },
+            // Sorting pipeline
+            {"$sort": {"socialNetwork": -1}}
+        ],
+        function (err, result) {
+
+            if (!err) {
+
+                var socialNetworkStatistics =[];
+
+                var total = 0;
+                result.forEach(function(socialNetworkStatistic){
+                    total = total + socialNetworkStatistic.count;
+                });
+
+                if (total > 0){
+                    result.forEach(function(socialNetworkStatistic){
+
+                        var socialNetwork = {
+                            type: socialNetworkStatistic._id.socialNetwork,
+                            percent: (socialNetworkStatistic.count / total)*100
+                        };
+
+                        if ( socialNetworkStatistic.count > 0){
+                            socialNetworkStatistics.push(socialNetwork);
+                        }
+                    });
+                }
+
+                var countrySocialNetwork = {
+                    country: statistic._id.country,
+                    percent: statistic.count,
+                    color: getColorBy(colorIndex),
+                    subs: socialNetworkStatistics
+                };
+
+                deferred.resolve(countrySocialNetwork);
+
+            }else{
+                return deferred.reject(err);
+            }
+        });
+
+    return deferred.promise;
+}
+
+
+function getAppVisitStatisticByCountryAndSocialNetwork(req,res){
+
+    //var fromDate = new Date("2017/05/26");
+    var fromDate = new Date(req.query.fromDate);
+    var toDate = new Date(req.query.toDate);
+
+    AppVisitStatistic.aggregate(
+        [
+            {
+                "$group": {
+                    _id : { country: "$country" },
+                    "count": { $sum: { $cond:[
+                        { $and: [ {$gte: ["$date", fromDate]}, {$lte: ["$date", toDate]} ] }, 1, 0]
+                    }}
+                }
+            },
+            // Sorting pipeline
+            {"$sort": {"country": -1}}
+        ],
+        function (err, result) {
+
+            if (!err) {
+
+                if (result.length > 0){
+
+                    var totalCountryCount = 0;
+                    result.forEach(function(appVisitStatistic){
+                        totalCountryCount = totalCountryCount + appVisitStatistic.count;
+                    });
+
+                    if (totalCountryCount > 0){
+
+                        var promises = [];
+
+                        result.forEach(function(statistic,index){
+                            promises.push(getSocialNetworkStatisticByCountry(statistic,index));
+                        });
+
+                        Q.all(promises)
+                            .then(function(results){
+
+                                var responses =[];
+
+                                results.forEach(function(result){
+
+                                    if (result.state === "fulfilled") {
+                                        var statistic = result.value;
+                                        statistic.percent = (statistic.percent / totalCountryCount)*100;
+                                        responses.push(statistic);
+                                    } else {
+                                        var reason = result.reason;
+                                        console.error(reason);
+                                    }
+                                });
+
+                                return res.json(responses);
+                            });
+                    }else{
+                        return res.json([]);
+                    }
+                }else{
+                    return res.json([]);
+                }
+            }else{
+                return res.send(err);
+            }
+        });
+}
+
 
 function getAppVisitStatistic(req,res) {
 
@@ -129,6 +270,7 @@ function postAppVisitStatistic(req, res) {
 
 //export all the functions
 module.exports = {
+    getAppVisitStatisticByCountryAndSocialNetwork: getAppVisitStatisticByCountryAndSocialNetwork,
     getAppVisitStatistic: getAppVisitStatistic,
     postAppVisitStatistic: postAppVisitStatistic
 };
