@@ -19,8 +19,12 @@ function getColorBy(colorIndex){
     return colorCombo[colorIndex];
 }
 
-function getSocialNetworkStatisticByCountry(statistic,colorIndex){
+function getSocialNetworkStatisticByCountry(data){
     var deferred = Q.defer();
+
+    var colorIndex = data.colorIndex;
+    var statistic =  data.statistic;
+
     AppVisitStatistic.aggregate(
         [
             { $match: {country: statistic._id.country }},
@@ -28,7 +32,7 @@ function getSocialNetworkStatisticByCountry(statistic,colorIndex){
                 "$group": {
                     _id : { socialNetwork: "$socialNetwork" },
                     "count": { $sum: { $cond:[
-                        { $and: [ {$gte: ["$date", fromDate]}, {$lte: ["$date", toDate]} ] }, 1, 0]
+                        { $and: [ {$gte: ["$date", data.fromDate]}, {$lte: ["$date", data.toDate]} ] }, 1, 0]
                     }}
                 }
             },
@@ -113,7 +117,15 @@ function getAppVisitStatisticByCountryAndSocialNetwork(req,res){
                         var promises = [];
 
                         result.forEach(function(statistic,index){
-                            promises.push(getSocialNetworkStatisticByCountry(statistic,index));
+
+                            var data = {
+                                statistic: statistic,
+                                colorIndex: index,
+                                fromDate: fromDate,
+                                toDate: toDate
+                            };
+
+                            promises.push(getSocialNetworkStatisticByCountry(data));
                         });
 
                         Q.all(promises)
