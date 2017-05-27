@@ -77,6 +77,8 @@ function getTop10Attractions(req,res){
 
             if (!err){
 
+                console.log(result);
+
                 Attraction.populate(result,{path: "_id"},function(err, results){
 
                     if (err){
@@ -86,13 +88,19 @@ function getTop10Attractions(req,res){
 
                         var topAttractionsVisited = [];
 
-                        results.forEach(function(statisticResult){
-                            var attractionVisited = {
-                                attractionName: statisticResult._id.name,
-                                visits: statisticResult.attractionCount
-                            };
+                        console.log(results);
 
-                            topAttractionsVisited.push(attractionVisited);
+                        results.forEach(function(statisticResult){
+
+                            if (statisticResult._id != null){
+
+                                var attractionVisited = {
+                                    attractionName: statisticResult._id.name,
+                                    visits: statisticResult.attractionCount
+                                };
+
+                                topAttractionsVisited.push(attractionVisited);
+                            }
                         });
 
                         res.json(topAttractionsVisited);
