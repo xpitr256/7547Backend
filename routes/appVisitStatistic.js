@@ -40,7 +40,7 @@ function getSocialNetworkStatisticByCountry(data){
                 }
             },
             // Sorting pipeline
-            {"$sort": {"socialNetwork": -1}}
+            {"$sort": {"_id.socialNetwork": -1}}
         ],
         function (err, result) {
 
@@ -104,7 +104,7 @@ function getAppVisitStatisticByCountryAndSocialNetwork(req,res){
                 }
             },
             // Sorting pipeline
-            {"$sort": {"country": -1}}
+            {"$sort": {"_id.country": -1}}
         ],
         function (err, result) {
 
