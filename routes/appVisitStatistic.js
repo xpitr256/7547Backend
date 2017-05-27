@@ -183,7 +183,7 @@ function getAppVisitStatistic(req,res) {
                 }
             },
             // Sorting pipeline
-            {"$sort": {"year": 1, "month":1}}
+            {"$sort": {"_id.year":1, "_id.month":1}}
         ],
         function (err, result) {
 
