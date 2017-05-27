@@ -70,7 +70,7 @@ function getSocialNetworkStatisticByCountry(data){
                 var name = countrynames.getName(statistic._id.country);
 
                 var countrySocialNetwork = {
-                    country: name,
+                    type: name,
                     percent: statistic.count,
                     color: getColorBy(colorIndex),
                     subs: socialNetworkStatistics
