@@ -5,6 +5,9 @@
 var AppVisitStatistic = require('../model/appVisitStatistic');
 var invalidSocialNetwork = require('./utils/socialNetwork.js').invalidSocialNetwork;
 var Q = require('q');
+var countrynames = require('countrynames');
+
+
 var monthToText = ["Enero", "Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
 function getColorBy(colorIndex){
@@ -65,7 +68,7 @@ function getSocialNetworkStatisticByCountry(data){
                 }
 
                 var countrySocialNetwork = {
-                    country: statistic._id.country,
+                    country: countrynames.getName(statistic._id.country),
                     percent: statistic.count,
                     color: getColorBy(colorIndex),
                     subs: socialNetworkStatistics
