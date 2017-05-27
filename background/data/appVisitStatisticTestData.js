@@ -97,6 +97,10 @@ var data = [
     {androidId: 73,userId:73,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
     {androidId: 74,userId:74,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
     {androidId: 75,userId:75,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
-    {androidId: 76,userId:76,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')}
+    {androidId: 76,userId:76,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
+
+    {androidId: 77,userId:76,socialNetwork:'TWITTER',country:'BR'},
+    {androidId: "onlyAndroidId"}
+
 ];
 module.exports = data;

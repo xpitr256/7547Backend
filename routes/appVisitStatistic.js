@@ -30,7 +30,7 @@ function getSocialNetworkStatisticByCountry(data){
 
     AppVisitStatistic.aggregate(
         [
-            { $match: {country: statistic._id.country }},
+            { $match: {country: statistic._id.country, socialNetwork:{ $ne: null }}},
             {
                 "$group": {
                     _id : { socialNetwork: "$socialNetwork" },
@@ -95,6 +95,7 @@ function getAppVisitStatisticByCountryAndSocialNetwork(req,res){
 
     AppVisitStatistic.aggregate(
         [
+            { $match: {country: { $ne: null } }},
             {
                 "$group": {
                     _id : { country: "$country" },
@@ -139,6 +140,7 @@ function getAppVisitStatisticByCountryAndSocialNetwork(req,res){
                                 var responses =[];
 
                                 results.forEach(function(statistic){
+
                                     statistic.percent = (statistic.percent / totalCountryCount)*100;
                                     statistic.percent = Number(statistic.percent.toFixed(2));
 
