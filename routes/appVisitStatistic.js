@@ -141,7 +141,10 @@ function getAppVisitStatisticByCountryAndSocialNetwork(req,res){
                                 results.forEach(function(statistic){
                                     statistic.percent = (statistic.percent / totalCountryCount)*100;
                                     statistic.percent = Number(statistic.percent.toFixed(2));
-                                    responses.push(statistic);
+
+                                    if (statistic.percent>0){
+                                        responses.push(statistic);
+                                    }
                                 });
 
                                 return res.json(responses);
