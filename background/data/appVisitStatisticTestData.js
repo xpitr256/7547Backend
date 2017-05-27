@@ -75,9 +75,6 @@ var data = [
     {androidId: 55,userId:45,socialNetwork:'FACEBOOK',country:'BR',date: new Date('2017-05-23T20:38:48.743Z')},
     {androidId: 56,userId:56,socialNetwork:'FACEBOOK',country:'BR',date: new Date('2017-05-23T20:38:48.743Z')},
 
-    {androidId: 57,userId:57,socialNetwork:'FACEBOOK',country:'BR',date: new Date('2017-05-24T20:38:48.743Z')},
-    {androidId: 58,userId:58,socialNetwork:'FACEBOOK',country:'BR',date: new Date('2017-05-24T20:38:48.743Z')},
-
     {androidId: 59,userId:59,socialNetwork:'FACEBOOK',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
     {androidId: 60,userId:60,socialNetwork:'FACEBOOK',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
     {androidId: 61,userId:61,socialNetwork:'FACEBOOK',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
@@ -94,7 +91,14 @@ var data = [
     {androidId: 67,userId:67,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-23T20:38:48.743Z')},
     {androidId: 68,userId:68,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-23T20:38:48.743Z')},
     {androidId: 69,userId:69,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-23T20:38:48.743Z')},
-    {androidId: 70,userId:70,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')}
+    {androidId: 70,userId:70,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
+    {androidId: 71,userId:71,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
+    {androidId: 72,userId:72,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
+    {androidId: 73,userId:73,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
+    {androidId: 74,userId:74,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
+    {androidId: 75,userId:75,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
+    {androidId: 76,userId:76,socialNetwork:'TWITTER',country:'BR',date: new Date('2017-05-25T20:38:48.743Z')},
+
 
 ];
 module.exports = data;

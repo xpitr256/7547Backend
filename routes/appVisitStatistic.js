@@ -58,7 +58,7 @@ function getSocialNetworkStatisticByCountry(data){
 
                         var socialNetwork = {
                             type: socialNetworkStatistic._id.socialNetwork,
-                            percent: (socialNetworkStatistic.count / total)*100
+                            percent: Number(((socialNetworkStatistic.count / total)*100).toFixed(2))
                         };
 
                         if ( socialNetworkStatistic.count > 0){
@@ -67,8 +67,10 @@ function getSocialNetworkStatisticByCountry(data){
                     });
                 }
 
+                var name = countrynames.getName(statistic._id.country);
+
                 var countrySocialNetwork = {
-                    country: countrynames.getName(statistic._id.country),
+                    country: name,
                     percent: statistic.count,
                     color: getColorBy(colorIndex),
                     subs: socialNetworkStatistics
@@ -136,19 +138,16 @@ function getAppVisitStatisticByCountryAndSocialNetwork(req,res){
 
                                 var responses =[];
 
-                                results.forEach(function(result){
-
-                                    if (result.state === "fulfilled") {
-                                        var statistic = result.value;
-                                        statistic.percent = (statistic.percent / totalCountryCount)*100;
-                                        responses.push(statistic);
-                                    } else {
-                                        var reason = result.reason;
-                                        console.error(reason);
-                                    }
+                                results.forEach(function(statistic){
+                                    statistic.percent = (statistic.percent / totalCountryCount)*100;
+                                    statistic.percent = Number(statistic.percent.toFixed(2));
+                                    responses.push(statistic);
                                 });
 
                                 return res.json(responses);
+                            })
+                            .fail(function(error){
+                                return res.send(error);
                             });
                     }else{
                         return res.json([]);
