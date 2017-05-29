@@ -92,6 +92,8 @@ function getAppVisitStatisticByCountryAndSocialNetwork(req,res){
     //var fromDate = new Date("2017/05/26");
     var fromDate = new Date(req.query.fromDate);
     var toDate = new Date(req.query.toDate);
+    toDate.setHours(23,59,59);
+
 
     AppVisitStatistic.aggregate(
         [
@@ -172,6 +174,8 @@ function getAppVisitStatistic(req,res) {
     //var fromDate = new Date("2017/05/26");
     var fromDate = new Date(req.query.fromDate);
     var toDate = new Date(req.query.toDate);
+    toDate.setHours(23,59,59);
+
 
     AppVisitStatistic.aggregate(
         [
