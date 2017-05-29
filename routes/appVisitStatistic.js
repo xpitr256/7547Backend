@@ -274,6 +274,7 @@ function postAppVisitStatistic(req, res) {
 
                     appVisitStatistics[0].userId = req.body.userId;
                     appVisitStatistics[0].socialNetwork = req.body.socialNetwork;
+                    appVisitStatistics[0].country = req.body.country;
 
                     appVisitStatistics[0].save(function (err, updatedAppStatistic) {
                         if (err){
